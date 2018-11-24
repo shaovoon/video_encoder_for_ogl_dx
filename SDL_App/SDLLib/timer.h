@@ -18,7 +18,7 @@ public:
 		auto dur = end - begin;
 		auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 		using namespace std;
-		printf("%s:%d ms", text.c_str(), ms);
+		printf("%s:%lld ms", text.c_str(), ms);
 	}
 
 private:

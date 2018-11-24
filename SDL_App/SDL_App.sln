@@ -19,8 +19,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDLLibVE", "SDLLibVE\SDLLib
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H264SinkWriter", "H264SinkWriter\H264SinkWriter.vcxproj", "{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}"
 	ProjectSection(ProjectDependencies) = postProject
-		{D1C53043-A587-4711-985D-5F242C5EE8BC} = {D1C53043-A587-4711-985D-5F242C5EE8BC}
+		{D78AF21F-1E78-437B-944F-6011E8A98C9B} = {D78AF21F-1E78-437B-944F-6011E8A98C9B}
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{00140C40-59D3-4AF6-A448-F43288470D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +136,30 @@ Global
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x64.Build.0 = Release|x64
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x86.ActiveCfg = Release|Win32
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x86.Build.0 = Release|Win32
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Emscripten.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Emscripten.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Win32.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x86.Build.0 = Debug|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Emscripten.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Emscripten.Build.0 = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Win32.Build.0 = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x64.Build.0 = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

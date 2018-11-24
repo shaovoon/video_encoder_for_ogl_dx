@@ -1,0 +1,6 @@
+Version=1.0.0.0
+ProjectName=My First Project
+ScreenWidth=800
+ScreenHeight=600
+LogPath=C:\Users\shaov\Documents\log.txt
+FPS=60

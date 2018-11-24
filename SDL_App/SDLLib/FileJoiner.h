@@ -116,9 +116,9 @@ public:
 		for(size_t i=0; i< vecSize.size(); ++i)
 		{
 			if(i== vecSize.size()-1)
-				fprintf(f, "%d ", vecSize[i]);
+				fprintf(f, "%lu ", vecSize[i]);
 			else
-				fprintf(f, "%d, ", vecSize[i]);
+				fprintf(f, "%lu, ", vecSize[i]);
 		}
 		fprintf(f, "};\n");
 

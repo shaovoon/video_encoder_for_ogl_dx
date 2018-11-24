@@ -28,7 +28,7 @@ using namespace Library;
 using namespace Rendering;
 
 #ifdef __EMSCRIPTEN__
-	#define SRC_FOLDER "http://localhost:16564/"
+	#define SRC_FOLDER "https://localhost:44319/"
 #else
 	#define SRC_FOLDER ".\\"
 #endif
@@ -38,7 +38,7 @@ ConfigSingleton gConfigSingleton;
 Logger gLogger;
 
 #if defined(__EMSCRIPTEN__)
-RenderingScene2* g_RenderingScene = NULL;
+RenderingScene* g_RenderingScene = NULL;
 void emscripten_main();
 int main()
 {
@@ -55,7 +55,7 @@ void emscripten_main()
 		}
 
 		Texture::setScreenDim(gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
-		RenderingScene2* renderingScene = new RenderingScene2(L"Photo Montage", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
+		RenderingScene* renderingScene = new RenderingScene(L"Photo Montage", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
 		g_RenderingScene = renderingScene;
 
 		renderingScene->Run();

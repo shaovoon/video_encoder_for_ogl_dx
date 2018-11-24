@@ -348,6 +348,7 @@ namespace Library
 				{
 					printf("%s\n", "Rendering starts...");
 #ifdef __EMSCRIPTEN__
+					/*
 					EM_ASM(var load_ele = document.getElementById("loading"); 
 					if (load_ele)
 					{
@@ -356,6 +357,7 @@ namespace Library
 					}
 					document.getElementById("MyMusic").play(); 
 					);
+					*/
 #endif
 					all_init = true;
 					mGameClock.Reset();

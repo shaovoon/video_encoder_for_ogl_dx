@@ -96,6 +96,7 @@ void ConfigSingleton::Parse(const std::string& name, const std::string& value)
 
 void ConfigSingleton::DownloadFiles()
 {
+	printf("SRC_FOLDER:%s\n", gDownloadSingleton.getSrcFolder().c_str());
 	gDownloadSingleton.DownloadFile(this, gDownloadSingleton.getSrcFolder(), "config.txt",
 		Library::DownloadableComponent::FileType::INI_FILE, false);
 }
@@ -104,10 +105,8 @@ bool ConfigSingleton::OpenFile(const char* file, FileType file_type)
 {
 	if (file_type == Library::DownloadableComponent::FileType::INI_FILE)
 	{
-		if (LoadConfigFile(file))
-		{
-			SetInitialized(true);
-		}
+		LoadConfigFile(file);
+		SetInitialized(true);
 		return true;
 	}
 
