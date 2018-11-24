@@ -10,8 +10,6 @@ RTTI_DEFINITIONS(ConfigSingleton)
 ConfigSingleton::ConfigSingleton()
 	: m_ScreenWidth(800)
 	, m_ScreenHeight(600)
-	, m_EnableBubblyText(false)
-	, m_GenTextBmp(false)
 	, m_LoadSuccess(false)
 	, m_FPS(30)
 {
@@ -37,7 +35,7 @@ bool ConfigSingleton::LoadConfigFile(const std::string& file)
 
 			trim(name);
 			trim(value);
-			parse(name, value);
+			Parse(name, value);
 		}
 		m_LoadSuccess = true; // TODO: port validation checks from other app
 		return true;
@@ -56,14 +54,6 @@ bool ConfigSingleton::WriteConfigFile(const std::string& file)
 		os << "ScreenWidth" << m_ScreenWidth << NEWLINE;
 		os << "ScreenHeight" << m_ScreenHeight << NEWLINE;
 		os << "LogPath" << m_LogPath << NEWLINE;
-		os << "BubblyText" << m_BubblyText << NEWLINE;
-		os << "BannerText" << m_BannerText << NEWLINE;
-		os << "EnableBubblyText" << (m_EnableBubblyText ? "true" : "false") << NEWLINE;
-		os << "BubblyTextConfig" << m_BubblyTextConfig << NEWLINE;
-		os << "BubblyTextImage" << m_BubblyTextImage << NEWLINE;
-		os << "BubblyTextShadowImage" << m_BubblyTextShadowImage << NEWLINE;
-		os << "GenTextBmp" << (m_GenTextBmp ? "true" : "false") << NEWLINE;
-		os << "PhotoFolder" << m_PhotoFolder << NEWLINE;
 		os << "FPS" << m_FPS << NEWLINE;
 		//os << << << NEWLINE;
 
@@ -76,21 +66,9 @@ bool ConfigSingleton::WriteConfigFile(const std::string& file)
 }
 
 
-void ConfigSingleton::parse(const std::string& name, const std::string& value)
+void ConfigSingleton::Parse(const std::string& name, const std::string& value)
 {
-	if (name == "ImageInfo")
-	{
-		capi::csv::istringstream ifs(value.c_str());
-		ifs.set_delimiter(',', "#comma;");
-		int r = 0, g = 0, b = 0;
-		if (ifs.read_line())
-		{
-			ImageDownloader::ImageInfo info;
-			ifs >> info.mFile >> info.mDim >> info.mWidth >> info.mHeight;
-			mImageInfoList.push_back(info);
-		}
-	}
-	else if (name == "Version")
+	if (name == "Version")
 	{
 		m_Version = value;
 	}
@@ -109,38 +87,6 @@ void ConfigSingleton::parse(const std::string& name, const std::string& value)
 	else if (name == "LogPath")
 	{
 		m_LogPath = value;
-	}
-	else if (name == "BubblyText")
-	{
-		m_BubblyText = value;
-	}
-	else if (name == "BannerText")
-	{
-		m_BannerText = value;
-	}
-	else if (name == "EnableBubblyText")
-	{
-		m_EnableBubblyText = ((value == "true") || (value == "1"));
-	}
-	else if (name == "BubblyTextConfig")
-	{
-		m_BubblyTextConfig = value;
-	}
-	else if (name == "BubblyTextImage")
-	{
-		m_BubblyTextImage = value;
-	}
-	else if (name == "BubblyTextShadowImage")
-	{
-		m_BubblyTextShadowImage = value;
-	}
-	else if (name == "GenTextBmp")
-	{
-		m_GenTextBmp = ((value == "true") || (value == "1"));
-	}
-	else if (name == "PhotoFolder")
-	{
-		m_PhotoFolder = value;
 	}
 	else if (name == "FPS")
 	{
