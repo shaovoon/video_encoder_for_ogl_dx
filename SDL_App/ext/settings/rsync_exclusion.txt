@@ -1,0 +1,14 @@
+[Rr]elease/
+[Dd]ebug/
+*.vcxproj
+*.filters
+*.obj
+*.iobj
+*.ilk
+*.pdb
+*.ipdb
+*.exe
+*.dll
+*.db
+*.png
+*.jpg

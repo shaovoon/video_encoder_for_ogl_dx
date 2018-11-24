@@ -1,0 +1,10 @@
+;===========================================================================
+;  Copyright (c) 1992-2002  Microsoft Corporation.  All Rights Reserved.
+;===========================================================================
+
+LIBRARY     SDL_App_DLL.DLL
+
+EXPORTS
+            DllMain                 PRIVATE
+            encoder_main            PRIVATE
+

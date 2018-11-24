@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Emscripten">
+      <Configuration>Debug</Configuration>
+      <Platform>Emscripten</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Emscripten">
+      <Configuration>Release</Configuration>
+      <Platform>Emscripten</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E6577B55-2078-4E50-9CDA-3471104FF2F5}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SDLLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>emcc</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>emcc</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\SDL2_mixer-2.0.0\lib\x86;..\Libraries\SDL2_image-2.0.0\lib\x86;..\Libraries\assimp\lib\assimp_release-dll_win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <IncludePath>C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\zlib\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\glew;C:\Users\wong\Documents\Libraries\SDL2-2.0.3\include;C:\Users\wong\Documents\Libraries\SDL2_mixer-2.0.0\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\glm-0.9.5.3\glm;C:\Users\wong\Documents\Libraries\SDL2_image-2.0.0\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\include;C:\Users\wong\Documents\Libraries\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\zlib\lib;C:\Users\wong\Documents\Libraries\SDL2-2.0.3\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_mixer-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\assimp\lib\assimp_release-dll_win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\SDL2_mixer-2.0.0\lib\x86;..\Libraries\SDL2_image-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <IncludePath>C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\zlib\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\glew;C:\Users\wong\Documents\Libraries\SDL2-2.0.3\include;C:\Users\wong\Documents\Libraries\SDL2_mixer-2.0.0\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\glm-0.9.5.3\glm;C:\Users\wong\Documents\Libraries\SDL2_image-2.0.0\include;C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\include;C:\Users\wong\Documents\Libraries\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\zlib\lib;C:\Users\wong\Documents\Libraries\SDL2-2.0.3\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_mixer-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\assimp\lib\assimp_release-dll_win32;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <TreatSpecificWarningsAsErrors>4189</TreatSpecificWarningsAsErrors>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;Shlwapi.lib;assimp.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ext\glew\glew.c" />
+    <ClCompile Include="..\ext\src\GdiplusContext.cpp" />
+    <ClCompile Include="AmbientModel.cpp" />
+    <ClCompile Include="AmbientModelList.cpp" />
+    <ClCompile Include="BinaryModel.cpp" />
+    <ClCompile Include="BinaryModelList.cpp" />
+    <ClCompile Include="AnimationVariable.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ColorHelper.cpp" />
+    <ClCompile Include="Common.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="DiffuseCube.cpp" />
+    <ClCompile Include="DiffuseModel.cpp" />
+    <ClCompile Include="DiffuseModelList.cpp" />
+    <ClCompile Include="EarthGlobe.cpp" />
+    <ClCompile Include="DownloadableComponent.cpp" />
+    <ClCompile Include="DownloadSingleton.cpp" />
+    <ClCompile Include="DrawableSceneComponent.cpp" />
+    <ClCompile Include="EarthGlobeMovingUV.cpp" />
+    <ClCompile Include="FirstPersonCamera.cpp" />
+    <ClCompile Include="ImageDownloader.cpp" />
+    <ClCompile Include="ImageEncoder.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelEffect.cpp" />
+    <ClCompile Include="OpenGLHelper.cpp" />
+    <ClCompile Include="ModelMaterial.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneClock.cpp" />
+    <ClCompile Include="SceneComponent.cpp" />
+    <ClCompile Include="SceneException.cpp" />
+    <ClCompile Include="SceneTime.cpp" />
+    <ClCompile Include="ServiceContainer.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SpecularModel.cpp" />
+    <ClCompile Include="StarModel.cpp" />
+    <ClCompile Include="StencilQuad.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="tiny_obj_loader.cpp" />
+    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="Variable.cpp" />
+    <ClCompile Include="VectorHelper.cpp" />
+    <ClCompile Include="VertexBufferHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ext\include\GdiplusContext.h" />
+    <ClInclude Include="..\ext\include\GL\glew.h" />
+    <ClInclude Include="AmbientModel.h" />
+    <ClInclude Include="AmbientModelList.h" />
+    <ClInclude Include="BinaryModel.h" />
+    <ClInclude Include="BinaryModelList.h" />
+    <ClInclude Include="Decrypt.h" />
+    <ClInclude Include="EarthGlobeMovingUV.h" />
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="AnimationVariable.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColorHelper.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="DiffuseCube.h" />
+    <ClInclude Include="DiffuseModel.h" />
+    <ClInclude Include="DiffuseModelList.h" />
+    <ClInclude Include="EarthGlobe.h" />
+    <ClInclude Include="DownloadableComponent.h" />
+    <ClInclude Include="DownloadSingleton.h" />
+    <ClInclude Include="DrawableSceneComponent.h" />
+    <ClInclude Include="FileJoiner.h" />
+    <ClInclude Include="FirstPersonCamera.h" />
+    <ClInclude Include="ImageDownloader.h" />
+    <ClInclude Include="ImageEncoder.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelEffect.h" />
+    <ClInclude Include="OpenGLHelper.h" />
+    <ClInclude Include="ModelMaterial.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="RTTI.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneClock.h" />
+    <ClInclude Include="SceneComponent.h" />
+    <ClInclude Include="SceneException.h" />
+    <ClInclude Include="SceneTime.h" />
+    <ClInclude Include="ServiceContainer.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SpecularModel.h" />
+    <ClInclude Include="StarModel.h" />
+    <ClInclude Include="StencilQuad.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VectorHelper.h" />
+    <ClInclude Include="VertexBufferHelper.h" />
+    <ClInclude Include="VertexDeclarations.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
