@@ -90,11 +90,8 @@
   <ItemGroup>
     <ClInclude Include="..\ext\include\StringUtils.h" />
     <ClInclude Include="..\ext\include\VariaNetDebugPrint.h" />
-    <ClInclude Include="BubblyText.h" />
-    <ClInclude Include="CircularProgress.h" />
     <ClInclude Include="ConfigSingleton.h" />
     <ClInclude Include="DS_Mp3.h" />
-    <ClInclude Include="PaintStroke.h" />
     <ClInclude Include="RenderingScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -102,11 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ext\src\StringUtils.cpp" />
-    <ClCompile Include="BubblyText.cpp" />
-    <ClCompile Include="CircularProgress.cpp" />
     <ClCompile Include="ConfigSingleton.cpp" />
     <ClCompile Include="DS_Mp3.cpp" />
-    <ClCompile Include="PaintStroke.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="RenderingScene.cpp" />
     <ClCompile Include="stdafx.cpp" />

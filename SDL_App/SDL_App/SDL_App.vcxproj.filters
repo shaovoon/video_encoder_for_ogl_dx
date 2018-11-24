@@ -42,15 +42,6 @@
     <ClInclude Include="..\ext\include\VariaNetDebugPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BubblyText.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CircularProgress.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PaintStroke.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,15 +63,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderingScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BubblyText.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CircularProgress.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PaintStroke.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

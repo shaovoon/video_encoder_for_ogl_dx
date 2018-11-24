@@ -6,5 +6,6 @@ LIBRARY     SDL_App_DLL.DLL
 
 EXPORTS
             DllMain                 PRIVATE
+            check_project_file            PRIVATE
             encoder_main            PRIVATE
 
