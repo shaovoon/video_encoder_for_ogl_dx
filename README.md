@@ -102,7 +102,8 @@ enum class VideoCodec
 };
 
 // H264Writer constructor
-H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, UINT32 bitrate = 4000000) :
+H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, 
+           VideoCodec codec, UINT32 bitrate = 4000000) :
 {...}
 ```
 
@@ -157,7 +158,8 @@ The fastest way to find all the encoding related code is to search for VIDEO_ENC
 
 ```Cpp
 extern int check_config_file(const wchar_t* file, int* width, int* height, int* fps);
-extern int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl);
+extern int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, 
+                         HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl);
 ```
 
 They in turn called their dll counterparts implemented in the Program.cpp
@@ -167,9 +169,11 @@ int check_config_file(const wchar_t* file, int* width, int* height, int* fps)
 {
     return ::check_project_file(file, width, height, fps);
 }
-int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
+int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, 
+                  HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
 {
-    return ::encoder_main(pixels, evtRequest, evtReply, evtExit, evtVideoEnded, szUrl);
+    return ::encoder_main(pixels, evtRequest, evtReply, evtExit, 
+                          evtVideoEnded, szUrl);
 }
 ```
 
