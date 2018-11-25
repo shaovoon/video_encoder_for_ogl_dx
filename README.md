@@ -108,6 +108,8 @@ H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest
 {...}
 ```
 
+To run the demo executable by itself, you need to copy the config.txt, Images and Models folders to the Release/Debug folder. The SDL2 dlls would have already copied during post build.
+
 ### Integration with your OpenGL Framework
 
 ### How the code works
