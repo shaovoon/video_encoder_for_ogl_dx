@@ -74,6 +74,38 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 }
 ```
 
+To modify the bitrate, there is no good way to do it except to edit the m_VideoBitrate manually in the H264Writer constructor.
+
+```Cpp
+// H264Writer constructor
+H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec) :
+    m_OpenSrcFileSuccess(false),
+    m_MP3Filename(mp3_file),
+    m_SrcFilename(src_file),
+    m_DestFilename(dest_file),
+    m_Width(0),
+    m_Height(0),
+    m_pImage(nullptr),
+    m_cbWidth(4 * m_Width),
+    m_cbBuffer(m_cbWidth * m_Height),
+    m_pBuffer(nullptr),
+    m_hThread(INVALID_HANDLE_VALUE),
+    m_evtRequest(INVALID_HANDLE_VALUE),
+    m_evtReply(INVALID_HANDLE_VALUE),
+    m_evtExit(INVALID_HANDLE_VALUE),
+    m_evtVideoEnded(INVALID_HANDLE_VALUE),
+    m_CoInited(false),
+    m_MFInited(false),
+    m_pSinkWriter(nullptr),
+    m_VideoFPS(60),
+    m_FrameDuration(10 * 1000 * 1000 / m_VideoFPS),
+    m_VideoBitrate(4000000),
+    m_EncCommonQuality(100),
+    m_VideoCodec(codec),
+    m_nStreams(0)
+{...}
+
+```
 
 ### Integration with your OpenGL Framework
 
