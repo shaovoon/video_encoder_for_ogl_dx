@@ -171,7 +171,8 @@ SDL_APP_DLL_API int WINAPI check_project_file(const wchar_t* file, int* width, i
     return ret;
 }
 
-SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
+SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, 
+                                        HANDLE evtVideoEnded, const WCHAR* szUrl)
 {
     try
     {
@@ -186,8 +187,10 @@ SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE
         }
 
         Texture::setScreenDim(gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
-        std::unique_ptr<RenderingScene> renderingScene(new RenderingScene(L"Photo Montage", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight()));
-        renderingScene->initVideoEncoder(pixels, evtRequest, evtReply, evtExit, evtVideoEnded, gConfigSingleton.GetFPS());
+        std::unique_ptr<RenderingScene> renderingScene(new RenderingScene(L"Photo Montage", 
+            gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight()));
+        renderingScene->initVideoEncoder(pixels, evtRequest, evtReply, evtExit, 
+            evtVideoEnded, gConfigSingleton.GetFPS());
 
         renderingScene->Run();
     }
@@ -207,10 +210,19 @@ SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE
 encoder_main is very similar to WinMain except it calls initVideoEncoder function to hand over the parameters. This is how initVideoEncoder is implemented: it just zero initialized some members and save the parameters inside its members. These HANDLE arguments are already initialized inside the H264Writer constructor. setTimeQuandant() is to set the time increment for every frame, for example if FPS is 30, then the time increment should be 33.3, irregardless of actual time passed. You wouldn't want varying time rate for your video encoding.
 
 ```Cpp
-void Scene::initVideoEncoder(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, int fps)
+void Scene::initVideoEncoder(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, 
+                             HANDLE evtExit, HANDLE evtVideoEnded, int fps)
 {
-    mTexture = 0; mRenderBuffer = 0; mDepthBuffer = 0; mMultisampleTexture = 0; mPixels = pixels; mPixelBuffer = nullptr;
-    mEvtRequest = evtRequest; mEvtReply = evtReply; mEvtExit = evtExit; mEvtVideoEnded = evtVideoEnded;
+    mTexture = 0; 
+    mRenderBuffer = 0; 
+    mDepthBuffer = 0; 
+    mMultisampleTexture = 0; 
+    mPixels = pixels; 
+    mPixelBuffer = nullptr;
+    mEvtRequest = evtRequest; 
+    mEvtReply = evtReply; 
+    mEvtExit = evtExit; 
+    mEvtVideoEnded = evtVideoEnded;
 
     mGameClock.setTimeQuandant((1000.0f/(float)fps)/1000.0f);
 }
@@ -222,8 +234,13 @@ This is how encoder_start is called in the worker thread started by H264Writer
 DWORD WINAPI ThreadOpenGLProc(LPVOID pParam)
 {
     H264Writer* pWriter = (H264Writer*)(pParam);
-    return ::encoder_start((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
-        pWriter->GetVideoEndedEvent(), pWriter->GetUrl().c_str());
+    return ::encoder_start((UINT**)(
+        pWriter->GetImagePtr()), 
+        pWriter->GetRequestEvent(), 
+        pWriter->GetReplyEvent(), 
+        pWriter->GetExitEvent(), 
+        pWriter->GetVideoEndedEvent(), 
+        pWriter->GetUrl().c_str());
 }
 ```
 
