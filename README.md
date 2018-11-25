@@ -2,6 +2,11 @@
 
 Writing documentation in process. Do not read or clone this repo now.
 
+### Requirements
+
+* Visual C++ 2015/2017
+* Windows 7/8/10
+
 ### Introduction
 
 I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow and it is tested on Windows 10. However, it should work fine on Windows 7/8 as well.
@@ -10,7 +15,9 @@ What are the pros and cons of this encoder over FFmpeg?
 
 FFmpeg is GPL and so you may not concerned if you just want to encode the output of your personal renderer. For my freemium app, I prefer to steer clear of the licensing issues. How hobbyist usually encode their frames with FFmpeg is to save all the frames in HDD first which limits the number of frames and also directly impacted video duration that can be saved depending on the free HDD space. The extra step of saving and opening the files has negative impact of the encoding speed. Of course, tight integration with FFmpeg code may eliminate the frame saving part. On the other hand, this encoder reads RGB values from the framebuffer provided. The downside is it is not portable and only works on Windows 7/8/10.
 
-The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section (empty) is on the explanation of the internals of the video encoder.
+The same OpenGL renderer can be compiled into 3 modes: normal OpenGL display mode, Video Encoder mode and Emscripten mode. The latter two's code sections are respectively guarded by VIDEO_ENCODER and __EMSCRIPTEN__ macros. You can, by all means, use your own renderer with the video encoder. The default OpenGL renderer is just provided to show a working demo.
+
+The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section (empty) is on the explanation of the internals of the video encoder. And the last section explains the Emscripten part required to compile into asm.js or Webassembly.
 
 ### Running the Demo
 
@@ -109,6 +116,43 @@ H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest
 ```
 
 To run the demo executable by itself, you need to copy the config.txt, Images and Models folders to the Release/Debug folder. The SDL2 dlls would have already copied during post build.
+
+By default, demo displays a rotating UFO saucer, to display other 3D model, just uncomment the other lines in CreateComponents(). 
+
+```Cpp
+	void RenderingScene::CreateComponents()
+	{
+		mCamera = std::unique_ptr<FirstPersonCamera>(new FirstPersonCamera(*this, 45.0f, 1.0f / 0.75f, 0.01f, 100.0f));
+		mComponents.push_back(mCamera.get());
+		mServices.AddService(Camera::TypeIdClass(), mCamera.get());
+
+		try
+		{
+			//mTexturedModelDemo = std::unique_ptr<TexturedDemo>(new TexturedDemo(*this, *mCamera));
+			//mComponents.push_back(mTexturedModelDemo.get());
+
+			//mDiffuseCube = std::unique_ptr<DiffuseCube>(new DiffuseCube(*this, *mCamera, "Cube.obj.txt", "Cube.mtl.txt"));
+			//mComponents.push_back(mDiffuseCube.get());
+			
+			mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
+			mComponents.push_back(mUFOSpecularModel.get());
+
+			//mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
+			//mComponents.push_back(mStarModel.get());
+		}
+		catch (SceneException& e)
+		{
+			char buf[1000];
+			SPRINTF(buf, "ModelEffect exception:%s", e.what());
+			gLogger.DebugPrint(buf);
+		}
+
+#ifdef __EMSCRIPTEN__
+		gDownloadSingleton.DownloadAllNow();
+#endif
+
+	}
+```
 
 ### Integration with your OpenGL Framework
 
