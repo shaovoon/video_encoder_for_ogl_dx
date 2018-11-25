@@ -94,6 +94,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>../Debug/SDL_App_DLLD.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x86\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -126,6 +136,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>../Release/SDL_App_DLL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x86\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
