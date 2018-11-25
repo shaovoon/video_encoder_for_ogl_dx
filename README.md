@@ -1,2 +1,3 @@
-# video_encoder_for_ogl_dx
-H264 Video Encoder for OpenGL and DirectX
+# H264 Video Encoder for OpenGL and DirectX
+
+Writing documentation in process. Do not read or clone this repo now.
