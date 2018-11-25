@@ -49,8 +49,6 @@ bool ConfigSingleton::WriteConfigFile(const std::string& file)
 	os.set_delimiter('=', "#equal;");
 	if (os.is_open())
 	{
-		os << "Version" << m_Version << NEWLINE;
-		os << "ProjectName" << m_ProjectName << NEWLINE;
 		os << "ScreenWidth" << m_ScreenWidth << NEWLINE;
 		os << "ScreenHeight" << m_ScreenHeight << NEWLINE;
 		os << "LogPath" << m_LogPath << NEWLINE;
@@ -68,15 +66,7 @@ bool ConfigSingleton::WriteConfigFile(const std::string& file)
 
 void ConfigSingleton::Parse(const std::string& name, const std::string& value)
 {
-	if (name == "Version")
-	{
-		m_Version = value;
-	}
-	else if (name == "ProjectName")
-	{
-		m_ProjectName = value;
-	}
-	else if (name == "ScreenWidth")
+	if (name == "ScreenWidth")
 	{
 		m_ScreenWidth = atoi(value.c_str());
 	}

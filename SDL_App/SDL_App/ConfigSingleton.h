@@ -21,8 +21,6 @@ public:
 	bool LoadConfigFile(const std::string& file);
 	bool WriteConfigFile(const std::string& file);
 
-	const std::string& GetVersion() const { return m_Version; }
-	const std::string& GetProjectName() const { return m_ProjectName; }
 	int GetScreenWidth() const { return m_ScreenWidth; }
 	int GetScreenHeight() const { return m_ScreenHeight; }
 	const std::string& GetLogPath() const { return m_LogPath; }
@@ -33,8 +31,6 @@ public:
 private:
 	void Parse(const std::string& name, const std::string& value);
 
-	std::string m_Version;
-	std::string m_ProjectName;
 	int m_ScreenWidth;
 	int m_ScreenHeight;
 	std::string m_LogPath;

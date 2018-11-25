@@ -44,15 +44,13 @@ getchar();
 The typical config.txt is to facilitate passing of information to OpenGL renderer, has nothing to do with video encoder. If your renderer can get the information about the video it is about to encode, then just pass a dummy config.txt. The contents of a typical config.txt is shown below.
 
 ```
-Version=1.0.0.0
-ProjectName=My First Project
 ScreenWidth=800
 ScreenHeight=600
 LogPath=C:\Users\shaov\Documents\log.txt
 FPS=60
 ```
 
-Now the demo does not handle aspect ratio and it always stick with 4:3 ratio. If you enter anything which is 16:9, or wider than 4:3, in screen width and height, your video will look stretched. FPS entry is for the integer number of frames per second; there is no way to enter a decimal number like 29.7777. Version and ProjectName is unimportant, you can ignore them.
+Now the demo does not handle aspect ratio and it always stick with 4:3 ratio. If you enter anything which is 16:9, or wider than 4:3, in screen width and height, your video will look stretched. FPS entry is for the integer number of frames per second; there is no way to enter a decimal number like 29.7777.
 
 The demo would only encode 5 seconds of the video. Change duration in RenderingScene::Draw function.
 
