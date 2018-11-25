@@ -12,8 +12,11 @@ _OpenGL Renderer_
 * SDL2
 * SDL2 Image
 * GLEW
+* GLM
 * Obj loader
 * Zlib
+
+All the OpenGL Renderer required libraries are included in the repository. The focus is on _Video Encoder_.
 
 ### Introduction
 
