@@ -6,7 +6,11 @@ Writing documentation in process. Do not read or clone this repo now.
 
 I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow and it is tested on Windows 10. However, it should work fine on Windows 7/8 as well.
 
-The documentation is divided into 3 main sections. First section is for those reader who like to see the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section is on the explanation of the internals of the video encoder.
+What are the pros and cons of this encoder over FFmpeg?
+
+FFmpeg is GPL and so you may not concerned if you just want to encode the output of your personal renderer. For my freemium app, I prefer to steer clear of the licensing issues. How hobbyist usually encode their frames with FFmpeg is to save all the frames in HDD first which limits the number of frames and also directly impacted video duration that can be saved depending on the free HDD space. The extra step of saving and opening the files has negative impact of the encoding speed. Of course, tight integration with FFmpeg code may eliminate the frame saving part. On the other hand, this encoder reads RGB values from the framebuffer provided. The downside is it is not portable and only works on Windows 7/8/10.
+
+The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section (empty) is on the explanation of the internals of the video encoder.
 
 ### Running the Demo
 
@@ -14,7 +18,7 @@ All the required libraries are included in the repository. The required dlls are
 
 To see the OpenGL demo, open up SDL_App.sln in Visual Studio and build the SDL_App project
 
-To run the video encoding demo, open up H264SinkWriter.cpp and in the main function, modify the configFile, musicFile and videoFile to the paths on your machine. configFile is found in the $(SolutionDir)SDL_App folder. musicFile should be a mp3 file and if it is left blank, the final video shall not have music. videoFile is the encoded video.
+To run the video encoding demo, open up H264SinkWriter.cpp and in the main function, modify the configFile, musicFile and videoFile to the paths on your machine. configFile is found in the $(SolutionDir)SDL_App folder. musicFile should be a mp3 file and if it is left blank, the final video shall not have music. videoFile is the encoded video. You can specify HVEC(aka H265) instead of H264 in the 4th parameter. HVEC is having some encoding issues where the colors bleed.
 
 ```Cpp
 // This is the config file to be found in SDL_App project folder.
@@ -74,7 +78,7 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 }
 ```
 
-To modify the bitrate, there is no good way to do it except to edit the m_VideoBitrate manually in the H264Writer constructor.
+To modify the bitrate, there is no good way to do it except to edit the m_VideoBitrate manually in the H264Writer constructor. 4000000 is very high. You can set it to lower. You have to experiment to find out the optimal bitrate that can encode a good quality video.
 
 ```Cpp
 // H264Writer constructor
@@ -104,7 +108,6 @@ H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest
     m_VideoCodec(codec),
     m_nStreams(0)
 {...}
-
 ```
 
 ### Integration with your OpenGL Framework
