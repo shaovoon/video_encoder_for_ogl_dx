@@ -2,7 +2,7 @@
 
 Writing documentation in process. Do not read or clone this repo now.
 
-### Requirements
+## Requirements
 
 _Video Encoder_
 * Visual C++ 2015/2017
@@ -18,7 +18,7 @@ _OpenGL Renderer_
 
 All the OpenGL Renderer required libraries are included in the repository. The focus is on _Video Encoder_.
 
-### Introduction
+## Introduction
 
 I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow and it is tested on Windows 10. However, it should work fine on Windows 7/8 as well.
 
@@ -30,7 +30,7 @@ The same OpenGL renderer can be compiled into 3 modes: normal OpenGL display mod
 
 The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section (empty) is on the explanation of the internals of the video encoder. And the last section explains the Emscripten part required to compile into asm.js or Webassembly.
 
-### Running the Demo
+## Running the Demo
 
 All the required libraries are included in the repository. The required dlls are copied automatically to the Release or Debug folder for Win32 post builds. x64 build is unbuildable due to inability to find a x64 zlib lib/dll on the web; this is a linking problem lies with the OpenGL renderer, not video encoder.
 
@@ -153,7 +153,7 @@ void RenderingScene::CreateComponents()
 }
 ```
 
-### Integration with your OpenGL Framework
+## Integration with your OpenGL Framework
 
 This section teaches the modification needed to integrate the video encoder into your renderer.
 
@@ -419,6 +419,6 @@ void Scene::Render(bool& quit)
 }
 ```
 
-### How is video encoder written
+## How is video encoder written
 
-### Running as asm.js on web browser
+## Running as asm.js on web browser

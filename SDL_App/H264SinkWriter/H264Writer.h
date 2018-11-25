@@ -995,6 +995,7 @@ private:
 DWORD WINAPI ThreadOpenGLProc(LPVOID pParam)
 {
 	H264Writer* pWriter = (H264Writer*)(pParam);
-	return ::encoder_start((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
+	return ::encoder_start((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), 
+		pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
 		pWriter->GetVideoEndedEvent(), pWriter->GetUrl().c_str());
 }
