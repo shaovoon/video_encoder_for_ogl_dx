@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -23,7 +31,20 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
@@ -36,7 +57,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
@@ -48,11 +75,23 @@
     <IncludePath>..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\assimp\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;..\SDLLib;$(IncludePath)</IncludePath>
     <LibraryPath>..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\assimp\lib\assimp_debug-dll_win32;..\Libraries\SDL2_image-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;..\SDLLib;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Libraries\SDL2-2.0.3\lib\x64;..\Libraries\SDL2_image-2.0.0\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\bin;$(ExecutablePath)</ExecutablePath>
     <IncludePath>..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\assimp\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;..\SDLLib;$(IncludePath)</IncludePath>
     <LibraryPath>..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\assimp\lib\assimp_release-dll_win32;..\Libraries\SDL2_image-2.0.0\lib\x86;..\ext\include;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <ExecutablePath>C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Visual Studio 2013\Projects\SDL_App\ext\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;..\SDLLib;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Libraries\SDL2-2.0.3\lib\x64;..\Libraries\SDL2_image-2.0.0\lib\x64;..\ext\include;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -74,6 +113,29 @@ IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2
 IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libwebp-4.dll" "$(OutDir)"
 IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\SDL2_image.dll" "$(OutDir)"
 IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(OutDir)SDLLib.lib;SDL2.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x64\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\zlib1.dll" "$(OutDir)"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -101,6 +163,33 @@ IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2
 IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\libwebp-4.dll" "$(OutDir)"
 IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\SDL2_image.dll" "$(OutDir)"
 IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x86\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(OutDir)SDLLib.lib;SDL2.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x64\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\zlib1.dll" "$(OutDir)"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

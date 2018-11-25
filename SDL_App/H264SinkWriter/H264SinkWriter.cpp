@@ -20,10 +20,14 @@ int main()
 		printf("H264Writer::EnumVideoEncoder failed!\n");
 	}
 	*/
-	std::wstring srcFilename(L"D:\\GitHub\\video_encoder_for_ogl_dx\\SDL_App\\SDL_App\\config.txt");
-	std::wstring mp3File(L"D:\\FMA.mp3");
+	// This is the config file to be found in SDL_App project folder.
+	std::wstring configFile(L"D:\\GitHub\\video_encoder_for_ogl_dx\\SDL_App\\SDL_App\\config.txt");
+	// This is your music file
+	std::wstring musicFile(L"D:\\FMA.mp3");
+	// This is the video encoded output file.
+	std::wstring videoFile(L"C:\\Users\\shaov\\Documents\\video.mp4");
 
-	H264Writer writer(mp3File.c_str(), srcFilename.c_str(), L"C:\\Users\\shaov\\Documents\\video.mp4", VideoCodec::H264);
+	H264Writer writer(musicFile.c_str(), configFile.c_str(), videoFile.c_str(), VideoCodec::H264);
 	if (writer.IsValid())
 	{
 		if (writer.Process())

@@ -117,6 +117,16 @@ IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x64\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -163,6 +173,16 @@ IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>IF NOT EXIST "$(OutDir)SDL2.dll" copy "$(SolutionDir)Libraries\SDL2-2.0.3\lib\x64\SDL2.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libjpeg-9.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libjpeg-9.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libpng16-16.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libpng16-16.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libtiff-5.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libtiff-5.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)libwebp-4.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\libwebp-4.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)SDL2_image.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\SDL2_image.dll" "$(OutDir)"
+IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0\lib\x64\zlib1.dll" "$(OutDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
