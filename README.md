@@ -375,6 +375,6 @@ void Scene::Render(bool& quit)
 }
 ```
 
-### How the code works
+### How is video encoder written
 
 ### Running as asm.js on web browser
