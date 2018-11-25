@@ -2,7 +2,17 @@
 //
 
 #include "stdafx.h"
+#include "../SDL_App_DLL/Program.h"
 #include "H264Writer.h"
+
+int check_config_file(const wchar_t* file, int* width, int* height, int* fps)
+{
+	return ::check_project_file(file, width, height, fps);
+}
+int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
+{
+	return ::encoder_main(pixels, evtRequest, evtReply, evtExit, evtVideoEnded, szUrl);
+}
 
 int main()
 {

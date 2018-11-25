@@ -14,7 +14,9 @@
 #include <Codecapi.h>
 #include <vector>
 #include <string>
-#include "../SDL_App_DLL/Program.h"
+
+extern int check_config_file(const wchar_t* file, int* width, int* height, int* fps);
+extern int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl);
 
 #pragma comment(lib, "mfreadwrite")
 #pragma comment(lib, "mfplat")
@@ -85,7 +87,7 @@ public:
 
 	const std::wstring& GetUrl()       const { return m_SrcFilename; }
 
-	H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec) :
+	H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, UINT32 bitrate = 4000000) :
 		m_OpenSrcFileSuccess(false),
 		m_MP3Filename(mp3_file),
 		m_SrcFilename(src_file),
@@ -106,13 +108,13 @@ public:
 		m_pSinkWriter(nullptr),
 		m_VideoFPS(60),
 		m_FrameDuration(10 * 1000 * 1000 / m_VideoFPS),
-		m_VideoBitrate(4000000),
+		m_VideoBitrate(bitrate),
 		m_EncCommonQuality(100),
 		m_VideoCodec(codec),
 		m_nStreams(0)
 	{
 		int width = 0; int height = 0; int fps = 0;
-		if (check_project_file(m_SrcFilename.c_str(), &width, &height, &fps))
+		if (check_config_file(m_SrcFilename.c_str(), &width, &height, &fps))
 		{
 			m_OpenSrcFileSuccess = true;
 			m_Width = width;
@@ -993,6 +995,6 @@ private:
 DWORD WINAPI ThreadOpenGLProc(LPVOID pParam)
 {
 	H264Writer* pWriter = (H264Writer*)(pParam);
-	return ::encoder_main((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
+	return ::encoder_start((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
 		pWriter->GetVideoEndedEvent(), pWriter->GetUrl().c_str());
 }

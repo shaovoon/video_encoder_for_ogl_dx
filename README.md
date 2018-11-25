@@ -156,4 +156,6 @@ By default, demo displays a rotating UFO saucer, to display other 3D model, just
 
 ### Integration with your OpenGL Framework
 
+The fastest way to find all the encoding related code is to search for all VIDEO_ENCODER macro in the source code
+
 ### How the code works
