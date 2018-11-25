@@ -93,8 +93,6 @@ SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE
 
 	try
 	{
-		//gConfigSingleton.SetUrl(szUrl);
-		//gConfigSingleton.DownloadFiles();
 		const std::string& config_file = toAString(szUrl);
 
 		gConfigSingleton.OpenFile(config_file.c_str(), Library::DownloadableComponent::FileType::INI_FILE);

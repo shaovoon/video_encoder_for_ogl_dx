@@ -132,6 +132,249 @@ void RenderingScene::CreateComponents()
 
 ### Integration with your OpenGL Framework
 
-The fastest way to find all the encoding related code is to search for VIDEO_ENCODER macro in the source code. 
+This section teaches the modification needed to integrate the video encoder into your renderer.
+
+The fastest way to find all the encoding related code is to search for VIDEO_ENCODER macro in the source code. The encoder requires you to implement 2 global functions: check_config_file and encoder_start. See their declarations below. encoder_start is called in the worker thread.
+
+```Cpp
+extern int check_config_file(const wchar_t* file, int* width, int* height, int* fps);
+extern int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl);
+```
+
+They in turn called their dll counterparts implemented in the Program.cpp
+
+```Cpp
+int check_config_file(const wchar_t* file, int* width, int* height, int* fps)
+{
+    return ::check_project_file(file, width, height, fps);
+}
+int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
+{
+    return ::encoder_main(pixels, evtRequest, evtReply, evtExit, evtVideoEnded, szUrl);
+}
+```
+
+check_project_file requires you to pass the screen width, height and FPS information from the file which is config.txt. In reality, you can just open any file which can provide you these information, so implementation of check_project_file is unimportant. Let's see how encoder_main is implemented.
+
+```Cpp
+SDL_APP_DLL_API int WINAPI check_project_file(const wchar_t* file, int* width, int* height, int* fps)
+{
+    ConfigSingleton config;
+    const std::string afile = toAString(file);
+    bool ret = config.LoadConfigFile(afile);
+    if (ret)
+    {
+        *width = config.GetScreenWidth();
+        *height = config.GetScreenHeight();
+        *fps = config.GetFPS();
+    }
+    return ret;
+}
+
+SDL_APP_DLL_API int WINAPI encoder_main(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl)
+{
+    try
+    {
+        const std::string& config_file = toAString(szUrl);
+
+        gConfigSingleton.OpenFile(config_file.c_str(), Library::DownloadableComponent::FileType::INI_FILE);
+        if (gConfigSingleton.IsLoadSuccess() == false)
+        {
+            gLogger.Log("gConfigSingleton.IsLoadSuccess() failed! See log!");
+
+            return 1;
+        }
+
+        Texture::setScreenDim(gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
+        std::unique_ptr<RenderingScene> renderingScene(new RenderingScene(L"Photo Montage", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight()));
+        renderingScene->initVideoEncoder(pixels, evtRequest, evtReply, evtExit, evtVideoEnded, gConfigSingleton.GetFPS());
+
+        renderingScene->Run();
+    }
+    catch (SceneException& ex)
+    {
+        gLogger.Log(ex.GetError().c_str());
+    }
+    catch (std::exception& ex)
+    {
+        gLogger.Log(ex.what());
+    }
+
+    return 0;
+}
+```
+
+encoder_main is very similar to WinMain except it calls initVideoEncoder function to hand over the parameters. This is how initVideoEncoder is implemented: it just zero initialized some members and save the parameters inside its members. These HANDLE arguments are already initialized inside the H264Writer constructor. setTimeQuandant() is to set the time increment for every frame, for example if FPS is 30, then the time increment should be 33.3, irregardless of actual time passed. You wouldn't want varying time rate for your video encoding.
+
+```Cpp
+void Scene::initVideoEncoder(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, int fps)
+{
+    mTexture = 0; mRenderBuffer = 0; mDepthBuffer = 0; mMultisampleTexture = 0; mPixels = pixels; mPixelBuffer = nullptr;
+    mEvtRequest = evtRequest; mEvtReply = evtReply; mEvtExit = evtExit; mEvtVideoEnded = evtVideoEnded;
+
+    mGameClock.setTimeQuandant((1000.0f/(float)fps)/1000.0f);
+}
+```
+
+This is how encoder_start is called in the worker thread started by H264Writer
+
+```Cpp
+DWORD WINAPI ThreadOpenGLProc(LPVOID pParam)
+{
+    H264Writer* pWriter = (H264Writer*)(pParam);
+    return ::encoder_start((UINT**)(pWriter->GetImagePtr()), pWriter->GetRequestEvent(), pWriter->GetReplyEvent(), pWriter->GetExitEvent(), 
+        pWriter->GetVideoEndedEvent(), pWriter->GetUrl().c_str());
+}
+```
+
+In our OpenGL renderer, we need to create RenderBuffer for our renderer to draw on.
+
+```Cpp
+void Scene::CreateFBO()
+{
+#ifdef VIDEO_ENCODER
+    mPixelBuffer = new unsigned int[mScreenWidth*mScreenHeight];
+
+    glGenTextures(1, &mMultisampleTexture);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mMultisampleTexture);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, mScreenWidth, mScreenHeight, GL_TRUE);
+
+    glGenRenderbuffers(1, &mRenderBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderBuffer);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 16, GL_RGBA8, mScreenWidth, mScreenHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderBuffer);
+
+    // Create depth render buffer (This is optional)
+    glGenRenderbuffers(1, &mDepthBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mDepthBuffer);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 16, GL_DEPTH24_STENCIL8, mScreenWidth, mScreenHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mDepthBuffer);
+
+    GLuint mTexture = 0;
+    glGenTextures(1, &mTexture);
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    unsigned int dim = determineMinDim(mScreenWidth, mScreenHeight);
+    unsigned int* pixels = new unsigned int[dim * dim];
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, dim, dim, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete [] pixels;
+    pixels = NULL;
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
+
+    // Enable multisampling
+    glEnable(GL_MULTISAMPLE);
+
+    if (GL_FRAMEBUFFER_COMPLETE == glCheckFramebufferStatus(GL_FRAMEBUFFER))
+    {
+        OutputDebugStringA("FBO status: Complete!\n");
+    }
+    else
+    {
+        OutputDebugStringA("FBO status: Not complete!\n");
+    }
+#endif // VIDEO_ENCODER
+}
+```
+
+determineMinDim() used in above function is implemented in this way because we need a square texture to power of 2.
+
+```Cpp
+#ifdef VIDEO_ENCODER
+unsigned int Scene::determineMinDim(unsigned int width, unsigned int height)
+{
+    unsigned int dim = width;
+    if (height > width)
+        dim = height;
+
+    unsigned int min_dim = 32;
+    if (dim > 32 && dim <= 64)
+        min_dim = 64;
+    else if (dim > 64 && dim <= 128)
+        min_dim = 128;
+    else if (dim > 128 && dim <= 256)
+        min_dim = 256;
+    else if (dim > 256 && dim <= 512)
+        min_dim = 512;
+    else if (dim > 512 && dim <= 1024)
+        min_dim = 1024;
+    else if (dim > 1024 && dim <= 2048)
+        min_dim = 2048;
+    else if (dim > 2048 && dim <= 4096)
+        min_dim = 4096;
+    else
+        min_dim = 4096;
+
+    return min_dim;
+}
+#endif // VIDEO_ENCODER
+```
+
+Lastly, we need to read the rendered buffer with glReadPixels.
+
+```Cpp
+void Scene::ReadBuffer(bool& quit)
+{
+#ifdef VIDEO_ENCODER
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+
+    glReadPixels(0, 0, mScreenWidth, mScreenHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE, mPixelBuffer);
+
+    HANDLE arrHandle[2];
+    arrHandle[0] = mEvtRequest;
+    arrHandle[1] = mEvtExit;
+
+    DWORD dwEvt = WaitForMultipleObjects(2, arrHandle, FALSE, INFINITE);
+
+    if (dwEvt == WAIT_OBJECT_0 + 1)
+    {
+        quit = true;
+    }
+    while (*mPixels == NULL) { Sleep(100); }
+
+    if(*mPixels)
+        memcpy(*mPixels, mPixelBuffer, mScreenWidth*mScreenHeight*sizeof(unsigned int));
+
+    SetEvent(mEvtReply);
+#endif // VIDEO_ENCODER
+}
+```
+
+This is how CreateFBO() and ReadBuffer() are called in my Render(). CreateFBO() and ReadBuffer() are empty when not compiled in VIDEO_ENCODER mode.
+
+```Cpp
+void Scene::Render(bool& quit)
+{
+    static bool all_init = false;
+    if (all_init == false)
+    {
+        if (IsAllReady())
+        {
+            CreateFBO();
+            Initialize();
+            if (IsAllInitialized())
+            {
+                all_init = true;
+                mGameClock.Reset();
+            }
+        }
+    }
+    if (all_init)
+    {
+        mGameClock.SetPause(mPaused);
+        if (mPaused == false)
+        {
+            mGameClock.UpdateGameTime(mGameTime);
+        }
+        Update(mGameTime);
+        Draw(mGameTime);
+        ReadBuffer(quit);
+    }
+}
+```
 
 ### How the code works
+
+### Running as asm.js on web browser
