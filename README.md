@@ -4,8 +4,16 @@ Writing documentation in process. Do not read or clone this repo now.
 
 ### Requirements
 
+_Video Encoder_
 * Visual C++ 2015/2017
 * Windows 7/8/10
+
+_OpenGL Renderer_
+* SDL2
+* SDL2 Image
+* GLEW
+* Obj loader
+* Zlib
 
 ### Introduction
 
@@ -75,7 +83,8 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 #ifdef VIDEO_ENCODER
     static GLfloat start_time = gameTime.TotalGameTime();
     GLfloat elapsed_time = gameTime.TotalGameTime() - start_time;
-    if(elapsed_time > 5.0f) // During video encoding, only run for 5 seconds.
+    // During video encoding, only run for 5 seconds.
+    if(elapsed_time > 5.0f) 
     {
         Scene::setVideoEnded();
     }
@@ -83,9 +92,15 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 }
 ```
 
-To modify the bitrate to other value, you can set the 5th parameter of the . You have to experiment to find out the optimal bitrate that can encode a good quality video.
+You have to experiment to find out the optimal bitrate that can encode a good quality video. 4000000 is overkill.
 
 ```Cpp
+enum class VideoCodec
+{
+    H264,
+    HVEC
+};
+
 // H264Writer constructor
 H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, UINT32 bitrate = 4000000) :
 {...}
@@ -98,7 +113,8 @@ By default, demo displays a rotating UFO saucer, to display other 3D model, just
 ```Cpp
 void RenderingScene::CreateComponents()
 {
-    mCamera = std::unique_ptr<FirstPersonCamera>(new FirstPersonCamera(*this, 45.0f, 1.0f / 0.75f, 0.01f, 100.0f));
+    mCamera = std::unique_ptr<FirstPersonCamera>(new 
+        FirstPersonCamera(*this, 45.0f, 1.0f / 0.75f, 0.01f, 100.0f));
     mComponents.push_back(mCamera.get());
     mServices.AddService(Camera::TypeIdClass(), mCamera.get());
 
@@ -107,13 +123,16 @@ void RenderingScene::CreateComponents()
         //mTexturedModelDemo = std::unique_ptr<TexturedDemo>(new TexturedDemo(*this, *mCamera));
         //mComponents.push_back(mTexturedModelDemo.get());
 
-        //mDiffuseCube = std::unique_ptr<DiffuseCube>(new DiffuseCube(*this, *mCamera, "Cube.obj.txt", "Cube.mtl.txt"));
+        //mDiffuseCube = std::unique_ptr<DiffuseCube>(new DiffuseCube(*this, *mCamera, 
+        //    "Cube.obj.txt", "Cube.mtl.txt"));
         //mComponents.push_back(mDiffuseCube.get());
         
-        mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
+        mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, 
+            "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
         mComponents.push_back(mUFOSpecularModel.get());
 
-        //mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
+        //mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, 
+        //    glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
         //mComponents.push_back(mStarModel.get());
     }
     catch (SceneException& e)
@@ -157,7 +176,8 @@ int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtE
 check_project_file requires you to pass the screen width, height and FPS information from the file which is config.txt. In reality, you can just open any file which can provide you these information, so implementation of check_project_file is unimportant. Let's see how encoder_main is implemented.
 
 ```Cpp
-SDL_APP_DLL_API int WINAPI check_project_file(const wchar_t* file, int* width, int* height, int* fps)
+SDL_APP_DLL_API int WINAPI check_project_file(const wchar_t* file, int* width, 
+                                              int* height, int* fps)
 {
     ConfigSingleton config;
     const std::string afile = toAString(file);
