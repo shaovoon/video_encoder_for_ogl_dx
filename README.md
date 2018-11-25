@@ -83,7 +83,7 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 }
 ```
 
-To modify the bitrate, there is no good way to do it except to edit the m_VideoBitrate manually in the H264Writer constructor. 4000000 is very high. You can set it to lower. You have to experiment to find out the optimal bitrate that can encode a good quality video.
+To modify the bitrate to other value, you can set the 5th parameter of the . You have to experiment to find out the optimal bitrate that can encode a good quality video.
 
 ```Cpp
 // H264Writer constructor
@@ -96,38 +96,38 @@ To run the demo executable by itself, you need to copy the config.txt, Images an
 By default, demo displays a rotating UFO saucer, to display other 3D model, just uncomment the other lines in CreateComponents(). 
 
 ```Cpp
-	void RenderingScene::CreateComponents()
-	{
-		mCamera = std::unique_ptr<FirstPersonCamera>(new FirstPersonCamera(*this, 45.0f, 1.0f / 0.75f, 0.01f, 100.0f));
-		mComponents.push_back(mCamera.get());
-		mServices.AddService(Camera::TypeIdClass(), mCamera.get());
+void RenderingScene::CreateComponents()
+{
+    mCamera = std::unique_ptr<FirstPersonCamera>(new FirstPersonCamera(*this, 45.0f, 1.0f / 0.75f, 0.01f, 100.0f));
+    mComponents.push_back(mCamera.get());
+    mServices.AddService(Camera::TypeIdClass(), mCamera.get());
 
-		try
-		{
-			//mTexturedModelDemo = std::unique_ptr<TexturedDemo>(new TexturedDemo(*this, *mCamera));
-			//mComponents.push_back(mTexturedModelDemo.get());
+    try
+    {
+        //mTexturedModelDemo = std::unique_ptr<TexturedDemo>(new TexturedDemo(*this, *mCamera));
+        //mComponents.push_back(mTexturedModelDemo.get());
 
-			//mDiffuseCube = std::unique_ptr<DiffuseCube>(new DiffuseCube(*this, *mCamera, "Cube.obj.txt", "Cube.mtl.txt"));
-			//mComponents.push_back(mDiffuseCube.get());
-			
-			mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
-			mComponents.push_back(mUFOSpecularModel.get());
+        //mDiffuseCube = std::unique_ptr<DiffuseCube>(new DiffuseCube(*this, *mCamera, "Cube.obj.txt", "Cube.mtl.txt"));
+        //mComponents.push_back(mDiffuseCube.get());
+        
+        mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
+        mComponents.push_back(mUFOSpecularModel.get());
 
-			//mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
-			//mComponents.push_back(mStarModel.get());
-		}
-		catch (SceneException& e)
-		{
-			char buf[1000];
-			SPRINTF(buf, "ModelEffect exception:%s", e.what());
-			gLogger.DebugPrint(buf);
-		}
+        //mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
+        //mComponents.push_back(mStarModel.get());
+    }
+    catch (SceneException& e)
+    {
+        char buf[1000];
+        SPRINTF(buf, "ModelEffect exception:%s", e.what());
+        gLogger.DebugPrint(buf);
+    }
 
 #ifdef __EMSCRIPTEN__
-		gDownloadSingleton.DownloadAllNow();
+    gDownloadSingleton.DownloadAllNow();
 #endif
 
-	}
+}
 ```
 
 ### Integration with your OpenGL Framework
