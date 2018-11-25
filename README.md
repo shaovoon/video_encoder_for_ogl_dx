@@ -53,26 +53,25 @@ Now the demo does not handle aspect ratio and it always stick with 4:3 ratio. If
 The demo would only encode 5 seconds of the video. Change duration in RenderingScene::Draw function.
 
 ```Cpp
-	void RenderingScene::Draw(const SceneTime& gameTime)
-	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		float grey = 35.0f / 255.0f;
-		glClearColor(grey, grey, grey, 1.0f);
+void RenderingScene::Draw(const SceneTime& gameTime)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    float grey = 35.0f / 255.0f;
+    glClearColor(grey, grey, grey, 1.0f);
 
-		Scene::Draw(gameTime);
+    Scene::Draw(gameTime);
 
-		SDL_GL_SwapWindow(mWindow);
+    SDL_GL_SwapWindow(mWindow);
 
 #ifdef VIDEO_ENCODER
-		static GLfloat start_time = gameTime.TotalGameTime();
-		GLfloat elapsed_time = gameTime.TotalGameTime() - start_time;
-		if(elapsed_time > 5.0f) // During video encoding, only run for 5 seconds.
-		{
-			Scene::setVideoEnded();
-		}
+    static GLfloat start_time = gameTime.TotalGameTime();
+    GLfloat elapsed_time = gameTime.TotalGameTime() - start_time;
+    if(elapsed_time > 5.0f) // During video encoding, only run for 5 seconds.
+    {
+        Scene::setVideoEnded();
+    }
 #endif
-
-	}
+}
 ```
 
 
