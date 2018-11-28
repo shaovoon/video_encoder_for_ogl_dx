@@ -18,7 +18,7 @@ int main()
 {
 	/*
 	std::vector<std::wstring> encoders;
-	if (H264Writer::EnumVideoEncoder(encoders, true, false))
+	if (H264Writer::EnumVideoEncoder(encoders, Processing::Software, VideoCodec::H264))
 	{
 		for (size_t i = 0; i < encoders.size(); ++i)
 		{
@@ -48,5 +48,6 @@ int main()
 	}
 	printf("Video write failed!\n");
 	getchar();
+	
 	return 1;
 }

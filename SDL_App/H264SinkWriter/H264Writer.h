@@ -62,7 +62,11 @@ enum class VideoCodec
 	H264,
 	HVEC
 };
-
+enum class Processing
+{
+	HardwareAcceleration,
+	Software
+};
 class H264Writer
 {
 public:
@@ -836,21 +840,21 @@ public:
 
 		return hr;
 	}
-	static const bool EnumVideoEncoder(std::vector<std::wstring>& encoders, bool hw_acc_only, bool hevc)
+	static const bool EnumVideoEncoder(std::vector<std::wstring>& encoders, Processing proc, VideoCodec codec)
 	{
 		MFT_REGISTER_TYPE_INFO output_MFT_type;
 		output_MFT_type.guidMajorType = MFMediaType_Video;
-		output_MFT_type.guidSubtype = hevc ? MFVideoFormat_HEVC : MFVideoFormat_H264;
+		output_MFT_type.guidSubtype = (codec == VideoCodec::HVEC) ? MFVideoFormat_HEVC : MFVideoFormat_H264;
 		IMFActivate **ppMFTActivate = NULL;
 		UINT32 count = 0;
 		HRESULT hr;
-		if (hw_acc_only)
+		if (proc == Processing::HardwareAcceleration)
 		{
 			hr = MFTEnumEx(MFT_CATEGORY_VIDEO_ENCODER, MFT_ENUM_FLAG_HARDWARE, NULL, &output_MFT_type, &ppMFTActivate, &count);
 		}
 		else
 		{
-			hr = MFTEnumEx(MFT_CATEGORY_VIDEO_ENCODER, MFT_ENUM_FLAG_SYNCMFT | MFT_ENUM_FLAG_ASYNCMFT | MFT_ENUM_FLAG_HARDWARE | MFT_ENUM_FLAG_SORTANDFILTER, NULL, &output_MFT_type, &ppMFTActivate, &count);
+			hr = MFTEnumEx(MFT_CATEGORY_VIDEO_ENCODER, MFT_ENUM_FLAG_SYNCMFT | MFT_ENUM_FLAG_ASYNCMFT | MFT_ENUM_FLAG_SORTANDFILTER, NULL, &output_MFT_type, &ppMFTActivate, &count);
 		}
 		if (SUCCEEDED(hr))
 		{
