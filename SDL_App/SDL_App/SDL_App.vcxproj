@@ -200,8 +200,10 @@ IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0
     <ClInclude Include="..\ext\include\StringUtils.h" />
     <ClInclude Include="..\ext\include\VariaNetDebugPrint.h" />
     <ClInclude Include="ConfigSingleton.h" />
+    <ClInclude Include="DiffuseCube.h" />
     <ClInclude Include="DS_Mp3.h" />
     <ClInclude Include="RenderingScene.h" />
+    <ClInclude Include="StarModel.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TexturedDemo.h" />
@@ -209,9 +211,11 @@ IF NOT EXIST "$(OutDir)zlib1.dll" copy "$(SolutionDir)Libraries\SDL2_image-2.0.0
   <ItemGroup>
     <ClCompile Include="..\ext\src\StringUtils.cpp" />
     <ClCompile Include="ConfigSingleton.cpp" />
+    <ClCompile Include="DiffuseCube.cpp" />
     <ClCompile Include="DS_Mp3.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="RenderingScene.cpp" />
+    <ClCompile Include="StarModel.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="TexturedDemo.cpp" />
   </ItemGroup>

@@ -160,8 +160,10 @@
   <ItemGroup>
     <ClInclude Include="..\ext\include\StringUtils.h" />
     <ClInclude Include="..\SDL_App\ConfigSingleton.h" />
+    <ClInclude Include="..\SDL_App\DiffuseCube.h" />
     <ClInclude Include="..\SDL_App\DS_Mp3.h" />
     <ClInclude Include="..\SDL_App\RenderingScene.h" />
+    <ClInclude Include="..\SDL_App\StarModel.h" />
     <ClInclude Include="..\SDL_App\TexturedDemo.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="stdafx.h" />
@@ -170,9 +172,11 @@
   <ItemGroup>
     <ClCompile Include="..\ext\src\StringUtils.cpp" />
     <ClCompile Include="..\SDL_App\ConfigSingleton.cpp" />
+    <ClCompile Include="..\SDL_App\DiffuseCube.cpp" />
     <ClCompile Include="..\SDL_App\DS_Mp3.cpp" />
     <ClCompile Include="..\SDL_App\Program.cpp" />
     <ClCompile Include="..\SDL_App\RenderingScene.cpp" />
+    <ClCompile Include="..\SDL_App\StarModel.cpp" />
     <ClCompile Include="..\SDL_App\TexturedDemo.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>

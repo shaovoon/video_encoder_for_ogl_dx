@@ -65,7 +65,7 @@ namespace Rendering
 			mUFOSpecularModel = std::unique_ptr<SpecularModel>(new SpecularModel(*this, *mCamera, "UFOSaucer3.jpg", "UFOSaucer.obj.txt.zip", "UFOSaucer.mtl.txt"));
 			mComponents.push_back(mUFOSpecularModel.get());
 
-			//mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,1.0f,0.0f), "Star.obj.txt", "Star.mtl.txt"));
+			//mStarModel = std::unique_ptr<StarModel>(new StarModel(*this, *mCamera, glm::vec3(1.0f,0.0f,1.0f), "Star.obj.txt", "Star.mtl.txt"));
 			//mComponents.push_back(mStarModel.get());
 		}
 		catch (SceneException& e)

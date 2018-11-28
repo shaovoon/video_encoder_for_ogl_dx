@@ -42,6 +42,12 @@
     <ClInclude Include="..\ext\include\VariaNetDebugPrint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DiffuseCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StarModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +69,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderingScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DiffuseCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StarModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
