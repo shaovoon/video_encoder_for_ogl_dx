@@ -60,7 +60,7 @@ template <class T> void SafeRelease(T **ppT)
 enum class VideoCodec
 {
 	H264,
-	HVEC
+	HEVC
 };
 enum class Processing
 {
@@ -310,7 +310,7 @@ public:
 		BREAK_ON_FAIL(hr);
 		hr = (*pMediaTypeOut)->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
 		BREAK_ON_FAIL(hr);
-		if (m_VideoCodec==VideoCodec::HVEC)
+		if (m_VideoCodec==VideoCodec::HEVC)
 		{
 			hr = (*pMediaTypeOut)->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_HEVC);
 			BREAK_ON_FAIL(hr);
@@ -844,7 +844,7 @@ public:
 	{
 		MFT_REGISTER_TYPE_INFO output_MFT_type;
 		output_MFT_type.guidMajorType = MFMediaType_Video;
-		output_MFT_type.guidSubtype = (codec == VideoCodec::HVEC) ? MFVideoFormat_HEVC : MFVideoFormat_H264;
+		output_MFT_type.guidSubtype = (codec == VideoCodec::HEVC) ? MFVideoFormat_HEVC : MFVideoFormat_H264;
 		IMFActivate **ppMFTActivate = NULL;
 		UINT32 count = 0;
 		HRESULT hr;
