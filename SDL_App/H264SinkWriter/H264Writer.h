@@ -663,7 +663,14 @@ public:
 			BREAK_ON_FAIL(hr);
 
 			// set the video subtype
-			hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_H264);
+			if (m_VideoCodec == VideoCodec::H264)
+			{
+				hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_H264);
+			}
+			else
+			{
+				hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_HEVC);
+			}
 			BREAK_ON_FAIL(hr);
 
 			// set the frame size to 720p as a 64-bit packed value
