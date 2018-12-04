@@ -689,7 +689,7 @@ public:
 			BREAK_ON_FAIL(hr);
 
 			// set the average bitrate of the video in bits per second - in this case 10 Mbps
-			hr = pStreamMediaType->SetUINT32(MF_MT_AVG_BITRATE, 10000000);
+			hr = pStreamMediaType->SetUINT32(MF_MT_AVG_BITRATE, m_VideoBitrate);
 			BREAK_ON_FAIL(hr);
 
 			// set the interlace mode to progressive

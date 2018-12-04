@@ -601,9 +601,784 @@ MFTIME minute = total_seconds / 60;
 MFTIME second = total_seconds % 60;
 ```
 
+Next function is InitializeWriter
+
 ```Cpp
+HRESULT InitializeWriter(DWORD *videoStreamIndex, DWORD *audioStreamIndex)
+{
+    HRESULT hr = S_OK;
+    m_pSourceReader = nullptr;
+    m_pSinkWriter = nullptr;
+    *videoStreamIndex = 1;
+    *audioStreamIndex = 0;
+
+    IMFMediaType    *pMediaTypeOut = nullptr;
+    IMFMediaType    *pMediaTypeIn = nullptr;
+    DWORD           streamIndex=1;
+    CComPtr<IMFAttributes> pConfigAttrs;
 ```
 
+We set the attributes that hardware accelerated transforms are preferred. When there is no hardware transforms installed on the system, software ones will be chosen.
 
+```Cpp
+    do
+    {
+        // create an attribute store
+        hr = MFCreateAttributes(&pConfigAttrs, 1);
+        BREAK_ON_FAIL(hr);
+
+        // set MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS property in the store
+        hr = pConfigAttrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+        BREAK_ON_FAIL(hr);
+```
+
+When the m_MP3Filename is specified, we create a m_pSourceReader that is able to decode mp3. pSource is used to get and print out the duration. which is useless. So you can delete the pSource line and all the lines below it.
+
+```Cpp
+        if (m_MP3Filename.empty() == false)
+        {
+            // create a source reader
+            hr = MFCreateSourceReaderFromURL(m_MP3Filename.c_str(), pConfigAttrs, &m_pSourceReader);
+            BREAK_ON_FAIL(hr);
+
+            IMFMediaSource* pSource = nullptr;
+            hr = m_pSourceReader->GetServiceForStream(
+                MF_SOURCE_READER_MEDIASOURCE,
+                GUID_NULL, //MF_MEDIASOURCE_SERVICE,
+                IID_IMFMediaSource,
+                (void**)&pSource
+            );
+            BREAK_ON_FAIL(hr);
+
+            MFTIME duration = 0;
+            hr = GetSourceDuration(pSource, &duration);
+            BREAK_ON_FAIL(hr);
+            if (pSource)
+                pSource->Release();
+
+            printf("Audio duration:%lld\n", duration);
+
+            MFTIME total_seconds = duration / 10000000;
+            MFTIME minute = total_seconds / 60;
+            MFTIME second = total_seconds % 60;
+            printf("Audio duration:%lld:%lld\n", minute, second);
+        }
+```
+
+As you can see our do-while is only executed once. The existence of do-while is mainly for BREAK_ON_FAIL macro to break out of it. Next we create a SinkWriter. MapStreams(), SetVideoOutputType() and SetVideoInputType() will be explained shortly.
+
+```Cpp
+        hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, nullptr, &m_pSinkWriter);
+        BREAK_ON_FAIL(hr);
+
+        // map the streams found in the source file from the source reader to the
+        // sink writer, while negotiating media types
+        hr = MapStreams();
+        BREAK_ON_FAIL(hr);
+
+        hr = SetVideoOutputType(&pMediaTypeOut, streamIndex);
+        BREAK_ON_FAIL(hr);
+        hr = SetVideoInputType(&pMediaTypeIn, streamIndex);
+        BREAK_ON_FAIL(hr);
+
+        hr = m_pSinkWriter->BeginWriting();
+        BREAK_ON_FAIL(hr);
+
+        *videoStreamIndex = streamIndex;
+    } while (false);
+
+    SafeRelease(&pMediaTypeOut);
+    SafeRelease(&pMediaTypeIn);
+    return hr;
+}
+```
+
+BREAK_ON_FAIL and BREAK_ON_NULL macro are defined in such a way.
+
+```Cpp
+#define BREAK_ON_FAIL(value)            if(FAILED(value)) break;
+#define BREAK_ON_NULL(value, newHr)     if(value == NULL) { hr = newHr; break; }
+```
+
+SetVideoOutputType() is to set the parameters of video output. You can experiment with the values and see how it affect the output. As for what parameters to set, Google is your best friend. I set to the highest quality.
+
+```Cpp
+HRESULT SetVideoOutputType(IMFMediaType** pMediaTypeOut, DWORD& streamIndex)
+{
+    HRESULT hr = S_OK;
+    do 
+    {
+    hr = MFCreateMediaType(pMediaTypeOut);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+    BREAK_ON_FAIL(hr);
+    if (m_VideoCodec==VideoCodec::HEVC)
+    {
+        hr = (*pMediaTypeOut)->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_HEVC);
+        BREAK_ON_FAIL(hr);
+        hr = (*pMediaTypeOut)->SetUINT32(MF_MT_MPEG2_PROFILE, eAVEncH265VProfile_Main_420_8);
+        BREAK_ON_FAIL(hr);
+    }
+    else
+    {
+        hr = (*pMediaTypeOut)->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_H264);
+        BREAK_ON_FAIL(hr);
+        hr = (*pMediaTypeOut)->SetUINT32(MF_MT_MPEG2_PROFILE, eAVEncH264VProfile_High);
+        BREAK_ON_FAIL(hr);
+    }
+
+
+    //hr = pMediaTypeOut->SetUINT32(CODECAPI_AVEncCommonRateControlMode, eAVEncCommonRateControlMode_Quality);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncCommonRateControlMode, eAVEncCommonRateControlMode_UnconstrainedVBR);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncCommonQuality, m_EncCommonQuality);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncVideoOutputColorLighting, eAVEncVideoColorLighting_Office);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncVideoOutputColorPrimaries, eAVEncVideoColorPrimaries_SameAsSource);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncVideoOutputColorTransferFunction, eAVEncVideoColorTransferFunction_SameAsSource);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncCommonQualityVsSpeed, 100); // 100 for quality and 0 for speed
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(MF_MT_AVG_BITRATE, m_VideoBitrate);
+    BREAK_ON_FAIL(hr);
+    hr = (*pMediaTypeOut)->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+    BREAK_ON_FAIL(hr);
+    hr = MFSetAttributeSize((*pMediaTypeOut), MF_MT_FRAME_SIZE, m_Width, m_Height);
+    BREAK_ON_FAIL(hr);
+    hr = MFSetAttributeRatio((*pMediaTypeOut), MF_MT_FRAME_RATE, m_VideoFPS, 1);
+    BREAK_ON_FAIL(hr);
+    hr = MFSetAttributeRatio((*pMediaTypeOut), MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+    BREAK_ON_FAIL(hr);
+    hr = m_pSinkWriter->AddStream((*pMediaTypeOut), &streamIndex);
+    } while (false);
+    return hr;
+}
+```
+
+SetVideoInputType() is setting input video format which our OpenGL format is RGB32.
+
+```Cpp
+const GUID   VIDEO_ENCODING_FORMAT = MFVideoFormat_H264;
+const GUID   VIDEO_INPUT_FORMAT = MFVideoFormat_RGB32;
+
+HRESULT SetVideoInputType(IMFMediaType** pMediaTypeIn, DWORD& streamIndex)
+{
+    HRESULT hr = S_OK;
+    do 
+    {
+        hr = MFCreateMediaType(pMediaTypeIn);
+        BREAK_ON_FAIL(hr);
+        hr = (*pMediaTypeIn)->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+        BREAK_ON_FAIL(hr);
+        hr = (*pMediaTypeIn)->SetGUID(MF_MT_SUBTYPE, VIDEO_INPUT_FORMAT);
+        BREAK_ON_FAIL(hr);
+        hr = (*pMediaTypeIn)->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
+        BREAK_ON_FAIL(hr);
+        hr = MFSetAttributeSize(*pMediaTypeIn, MF_MT_FRAME_SIZE, m_Width, m_Height);
+        BREAK_ON_FAIL(hr);
+        hr = MFSetAttributeRatio(*pMediaTypeIn, MF_MT_FRAME_RATE, m_VideoFPS, 1);
+        BREAK_ON_FAIL(hr);
+        hr = MFSetAttributeRatio(*pMediaTypeIn, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+        BREAK_ON_FAIL(hr);
+        hr = m_pSinkWriter->SetInputMediaType(streamIndex, *pMediaTypeIn, NULL);
+    } while (false);
+
+    return hr;
+}
+```
+
+ConnectStream() is attempting to connect the input and output which the source and sink can agree on. This function is mainly boilerplate code.
+
+```Cpp
+//
+// Attempt to find an uncompressed media type for the specified stream that both the source 
+// and sink can agree on
+//
+HRESULT ConnectStream(DWORD dwStreamIndex,
+    const GUID& streamMajorType)
+{
+    HRESULT hr = S_OK;
+
+    CComPtr<IMFMediaType> pPartialMediaType;
+    CComPtr<IMFMediaType> pFullMediaType;
+
+    BOOL fConfigured = FALSE;
+    GUID* intermediateFormats = NULL;
+    int nFormats = 0;
+
+```
+
+Here comes the familiar do-only-once do-while loop. We set the GUID of the container type.
+
+```Cpp
+    do
+    {
+        // create a media type container object that will be used to match stream input
+        // and output media types
+        hr = MFCreateMediaType(&pPartialMediaType);
+        BREAK_ON_FAIL(hr);
+
+        // set the major type of the partial match media type container
+        hr = pPartialMediaType->SetGUID(MF_MT_MAJOR_TYPE, streamMajorType);
+        BREAK_ON_FAIL(hr);
+
+        // Get the appropriate list of intermediate formats - formats that every decoder and
+        // encoder of that type should agree on.  Essentially these are the uncompressed 
+        // formats that correspond to decoded frames for video, and uncompressed audio 
+        // formats
+        if (streamMajorType == MFMediaType_Video)
+        {
+            intermediateFormats = intermediateVideoFormats;
+            nFormats = nIntermediateVideoFormats;
+        }
+        else if (streamMajorType == MFMediaType_Audio)
+        {
+            intermediateFormats = intermediateAudioFormats;
+            nFormats = nIntermediateAudioFormats;
+        }
+        else
+        {
+            hr = E_UNEXPECTED;
+            break;
+        }
+
+```
+
+Next, we iterate over every format and find one that can match m_pSourceReader by SetCurrentMediaType(). When it is happy, we can GetCurrentMediaType to get the full media type. If none can match, we set hr to MF_E_INVALIDMEDIATYPE;
+
+```Cpp
+        // loop through every intermediate format that you have for this major type, and
+        // try to find one on which both the source stream and sink stream can agree on
+        for (int x = 0; x < nFormats; x++)
+        {
+            // set the format of the partial media type
+            hr = pPartialMediaType->SetGUID(MF_MT_SUBTYPE, intermediateFormats[x]);
+            BREAK_ON_FAIL(hr);
+
+            // set the partial media type on the source stream
+            hr = m_pSourceReader->SetCurrentMediaType(
+                dwStreamIndex,                      // stream index
+                NULL,                               // reserved - always NULL
+                pPartialMediaType);                // media type to try to set
+
+                                                   // if the source stream (i.e. the decoder) is not happy with this media type -
+                                                   // if it cannot decode the data into this media type, restart the loop in order 
+                                                   // to try the next format on the list
+            if (FAILED(hr))
+            {
+                hr = S_OK;
+                continue;
+            }
+
+            pFullMediaType = NULL;
+
+            // if you got here, the source stream is happy with the partial media type you set
+            // - extract the full media type for this stream (with all internal fields 
+            // filled in)
+            hr = m_pSourceReader->GetCurrentMediaType(dwStreamIndex, &pFullMediaType);
+
+            // Now try to match the full media type to the corresponding sink stream
+            hr = m_pSinkWriter->SetInputMediaType(
+                dwStreamIndex,             // stream index
+                pFullMediaType,            // media type to match
+                NULL);                    // configuration attributes for the encoder
+
+                                          // if the sink stream cannot accept this media type - i.e. if no encoder was
+                                          // found that would accept this media type - restart the loop and try the next
+                                          // format on the list
+            if (FAILED(hr))
+            {
+                hr = S_OK;
+                continue;
+            }
+
+            // you found a media type that both the source and sink could agree on - no need
+            // to try any other formats
+            fConfigured = TRUE;
+            break;
+        }
+        BREAK_ON_FAIL(hr);
+
+        // if you didn't match any formats return an error code
+        if (!fConfigured)
+        {
+            hr = MF_E_INVALIDMEDIATYPE;
+            break;
+        }
+
+    } while (false);
+
+    return hr;
+}
+```
+
+MapStreams() is for MP3 file, so when it is not specified, we return. m_pSourceReader is for MP3 file. OpenGL source does not need a SourceReader because it is uncompressed and we know its format and there is no video file to read for OpenGL input, unless you can count the config.txt which contains dimension and FPS. MapStreams() is also mostly boilerplate code I copied somewhere.
+
+```Cpp
+HRESULT MapStreams(void)
+{
+    if (m_MP3Filename.empty())
+        return S_OK;
+
+    HRESULT hr = S_OK;
+    BOOL isStreamSelected = FALSE;
+    DWORD sourceStreamIndex = 0;
+    DWORD sinkStreamIndex = 0;
+    GUID streamMajorType;
+    CComPtr<IMFMediaType> pStreamMediaType;
+```
+
+The code below add the audio stream to sinkwriter. A media file such as video can contain more than just video and audio, for example subtitle. For encoder, we do not care about media types other than MFMediaType_Audio. Ignore MFMediaType_Video in the code because MapStreams is called for MP3 m_pSourceReader.
+
+```Cpp
+do
+    {
+        m_nStreams = 0;
+
+        while (SUCCEEDED(hr))
+        {
+            // check whether you have a stream with the right index - if you don't, the 
+            // IMFSourceReader::GetStreamSelection() function will fail, and you will drop
+            // out of the while loop
+            hr = m_pSourceReader->GetStreamSelection(sourceStreamIndex, &isStreamSelected);
+            if (FAILED(hr))
+            {
+                hr = S_OK;
+                break;
+            }
+
+            // count the total number of streams for later
+            m_nStreams++;
+
+            // get the source media type of the stream
+            hr = m_pSourceReader->GetNativeMediaType(
+                sourceStreamIndex,           // index of the stream you are interested in
+                0,                           // index of the media type exposed by the 
+                                             //    stream decoder
+                &pStreamMediaType);          // media type
+            BREAK_ON_FAIL(hr);
+
+            // extract the major type of the source stream from the media type
+            hr = pStreamMediaType->GetMajorType(&streamMajorType);
+            BREAK_ON_FAIL(hr);
+
+            // select a stream, indicating that the source should send out its data instead
+            // of dropping all of the samples
+            hr = m_pSourceReader->SetStreamSelection(sourceStreamIndex, TRUE);
+            BREAK_ON_FAIL(hr);
+
+            // if this is a video or audio stream, transcode it and negotiate the media type
+            // between the source reader stream and the corresponding sink writer stream.  
+            // If this is a some other stream format (e.g. subtitles), just pass the media 
+            // type unchanged.
+            if (streamMajorType == MFMediaType_Audio || streamMajorType == MFMediaType_Video)
+            {
+                // get the target media type - the media type into which you will transcode
+                // the data of the current source stream
+                hr = GetTranscodeMediaType(pStreamMediaType);
+                BREAK_ON_FAIL(hr);
+
+                // add the stream to the sink writer - i.e. tell the sink writer that a 
+                // stream with the specified index will have the target media type
+                hr = m_pSinkWriter->AddStream(pStreamMediaType, &sinkStreamIndex);
+                BREAK_ON_FAIL(hr);
+
+                // hook up the source and sink streams - i.e. get them to agree on an
+                // intermediate media type that will be used to pass data between source 
+                // and sink
+                hr = ConnectStream(sourceStreamIndex, streamMajorType);
+                BREAK_ON_FAIL(hr);
+            }
+            else
+            {
+                // add the stream to the sink writer with the exact same media type as the
+                // source stream
+                hr = m_pSinkWriter->AddStream(pStreamMediaType, &sinkStreamIndex);
+                BREAK_ON_FAIL(hr);
+            }
+
+            // make sure that the source stream index is equal to the sink stream index
+            if (sourceStreamIndex != sinkStreamIndex)
+            {
+                hr = E_UNEXPECTED;
+                break;
+            }
+
+            // increment the source stream index, so that on the next loop you are analyzing
+            // the next stream
+            sourceStreamIndex++;
+
+            // release the media type
+            pStreamMediaType = NULL;
+        }
+
+        BREAK_ON_FAIL(hr);
+
+    } while (false);
+
+    return hr;
+}
+```
+
+GetTranscodeAudioType() is to set output audio type. I have forgotten why destination format is MFAudioFormat_AAC, you are welcome to set to MFAudioFormat_MP3.
+
+```Cpp
+//
+// Get the target audio media type - use the AAC media format.
+//
+HRESULT GetTranscodeAudioType(
+    CComPtr<IMFMediaType>& pStreamMediaType)
+{
+    HRESULT hr = S_OK;
+
+    do
+    {
+        BREAK_ON_NULL(pStreamMediaType, E_POINTER);
+
+        // wipe out existing data from the media type
+        hr = pStreamMediaType->DeleteAllItems();
+        BREAK_ON_FAIL(hr);
+
+        // reset the major type to audio since we just wiped everything out
+        pStreamMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
+        BREAK_ON_FAIL(hr);
+
+        // set the audio subtype
+        hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_AAC);
+        BREAK_ON_FAIL(hr);
+
+        // set the number of audio bits per sample
+        hr = pStreamMediaType->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
+        BREAK_ON_FAIL(hr);
+
+        // set the number of audio samples per second
+        hr = pStreamMediaType->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100);
+        BREAK_ON_FAIL(hr);
+
+        // set the number of audio channels
+        hr = pStreamMediaType->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2);
+        BREAK_ON_FAIL(hr);
+
+        // set the Bps of the audio stream
+        hr = pStreamMediaType->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 16000);
+        BREAK_ON_FAIL(hr);
+
+        // set the block alignment of the samples
+        hr = pStreamMediaType->SetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, 1);
+        BREAK_ON_FAIL(hr);
+    } while (false);
+
+    return hr;
+}
+```
+
+Similarly, GetTranscodeVideoType() is to set output video type.
+
+```Cpp
+//
+// Get the target video media type - use the H.264 media format.
+//
+HRESULT GetTranscodeVideoType(
+    CComPtr<IMFMediaType>& pStreamMediaType)
+{
+    HRESULT hr = S_OK;
+
+    do
+    {
+        BREAK_ON_NULL(pStreamMediaType, E_POINTER);
+
+        // wipe out existing data from the media type
+        hr = pStreamMediaType->DeleteAllItems();
+        BREAK_ON_FAIL(hr);
+
+        // reset the major type to video since we just wiped everything out
+        pStreamMediaType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
+        BREAK_ON_FAIL(hr);
+
+        // set the video subtype
+        if (m_VideoCodec == VideoCodec::H264)
+        {
+            hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_H264);
+        }
+        else
+        {
+            hr = pStreamMediaType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_HEVC);
+        }
+        BREAK_ON_FAIL(hr);
+
+        // set the frame size to 720p as a 64-bit packed value
+        hr = MFSetAttributeSize(
+            pStreamMediaType,           // attribute store on which to set the value
+            MF_MT_FRAME_SIZE,           // value ID GUID
+            m_Width, m_Height);                 // frame width and height
+        BREAK_ON_FAIL(hr);
+
+        // Set the frame rate to 30/1.001 - the standard frame rate of NTSC television - as 
+        // a 64-bit packed value consisting of a fraction of two integers
+        hr = MFSetAttributeRatio(
+            pStreamMediaType,           // attribute store on which to set the value
+            MF_MT_FRAME_RATE,           // value
+            m_VideoFPS, 1);               // frame rate ratio
+        BREAK_ON_FAIL(hr);
+
+        // set the average bitrate of the video in bits per second - in this case 10 Mbps
+        hr = pStreamMediaType->SetUINT32(MF_MT_AVG_BITRATE, m_VideoBitrate);
+        BREAK_ON_FAIL(hr);
+
+        // set the interlace mode to progressive
+        hr = pStreamMediaType->SetUINT32(MF_MT_INTERLACE_MODE,
+            MFVideoInterlace_Progressive);
+        BREAK_ON_FAIL(hr);
+
+        // set the pixel aspect ratio to 1x1 - square pixels
+        hr = MFSetAttributeSize(pStreamMediaType, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
+        BREAK_ON_FAIL(hr);
+    } while (false);
+
+    return hr;
+}
+```
+
+GetTranscodeMediaType() calls either GetTranscodeAudioType() or GetTranscodeVideoType() to do its work.
+```Cpp
+//
+// Set the target target audio and video media types to hard-coded values.  In this case you
+// are setting audio to AAC, and video to 720p H.264
+//
+HRESULT GetTranscodeMediaType(
+    CComPtr<IMFMediaType>& pStreamMediaType)
+{
+    HRESULT hr = S_OK;
+    GUID streamMajorType;
+
+    do
+    {
+        // extract the major type of the source stream from the media type
+        hr = pStreamMediaType->GetMajorType(&streamMajorType);
+        BREAK_ON_FAIL(hr);
+
+        // if this is an audio stream, configure a hard-coded AAC profile.  If this is a
+        // video stream, configure an H.264 profile
+        if (streamMajorType == MFMediaType_Audio)
+        {
+            hr = GetTranscodeAudioType(pStreamMediaType);
+        }
+        else if (streamMajorType == MFMediaType_Video)
+        {
+            hr = GetTranscodeVideoType(pStreamMediaType);
+        }
+    } while (false);
+
+    return hr;
+}
+```
+
+WriteVideoFrame() copy m_pImage to pData. And set buffer length. Then it create a sample to attach m_pBuffer. Of course, sample must be set with its sampling time and duration. Finally, send the sample to the SinkWriter.
+
+```Cpp
+HRESULT WriteVideoFrame(
+    DWORD streamIndex,
+    const LONGLONG& rtStart
+)
+{
+    IMFSample *pSample = NULL;
+
+    BYTE *pData = NULL;
+    // Lock the buffer and copy the video frame to the buffer.
+    HRESULT hr = m_pBuffer->Lock(&pData, NULL, NULL);
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCopyImage(
+            pData,              // Destination buffer.
+            m_cbWidth,          // Destination stride.
+            (BYTE*)m_pImage,    // First row in source image.
+            m_cbWidth,          // Source stride.
+            m_cbWidth,          // Image width in bytes.
+            m_Height            // Image height in pixels.
+        );
+    }
+    if (m_pBuffer)
+    {
+        m_pBuffer->Unlock();
+    }
+
+    // Set the data length of the buffer.
+    if (SUCCEEDED(hr))
+    {
+        hr = m_pBuffer->SetCurrentLength(m_cbBuffer);
+    }
+
+    // Create a media sample and add the buffer to the sample.
+    if (SUCCEEDED(hr))
+    {
+        hr = MFCreateSample(&pSample);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->AddBuffer(m_pBuffer);
+    }
+
+    // Set the time stamp and the duration.
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->SetSampleTime(rtStart);
+    }
+    if (SUCCEEDED(hr))
+    {
+        hr = pSample->SetSampleDuration(m_FrameDuration);
+    }
+
+    // Send the sample to the Sink Writer.
+    if (SUCCEEDED(hr))
+    {
+        hr = m_pSinkWriter->WriteSample(streamIndex, pSample);
+    }
+
+    SafeRelease(&pSample);
+    return hr;
+}
+```
+
+WriteAudioFrame() read sample from m_pSourceReader and send it to SinkWriter.
+
+```Cpp
+HRESULT WriteAudioFrame(DWORD streamIndex, LONGLONG& timestamp)
+{
+    HRESULT hr = S_OK;
+    DWORD flags = 0;
+    CComPtr<IMFSample> pSample;
+
+    do
+    {
+        // pull a sample out of the source reader
+        hr = m_pSourceReader->ReadSample(
+            (DWORD)MF_SOURCE_READER_ANY_STREAM,     // get a sample from any stream
+            0,                                      // no source reader controller flags
+            &streamIndex,                         // get index of the stream
+            &flags,                               // get flags for this sample
+            &timestamp,                           // get the timestamp for this sample
+            &pSample);                             // get the actual sample
+        BREAK_ON_FAIL(hr);
+
+        // The sample can be null if you've reached the end of stream or encountered a
+        // data gap (AKA a stream tick).  If you got a sample, send it on.  Otherwise,
+        // if you got a stream gap, send information about it to the sink.
+        if (pSample != NULL)
+        {
+            // push the sample to the sink writer
+            hr = m_pSinkWriter->WriteSample(streamIndex, pSample);
+            BREAK_ON_FAIL(hr);
+        }
+        else if (flags & MF_SOURCE_READERF_STREAMTICK)
+        {
+            // signal a stream tick
+            hr = m_pSinkWriter->SendStreamTick(streamIndex, timestamp);
+            BREAK_ON_FAIL(hr);
+        }
+
+        // if a stream reached the end, notify the sink, and increment the number of
+        // finished streams
+        if (flags & MF_SOURCE_READERF_ENDOFSTREAM)
+        {
+            hr = m_pSinkWriter->NotifyEndOfSegment(streamIndex);
+            BREAK_ON_FAIL(hr);
+        }
+        // release sample
+        pSample = NULL;
+    } while (false);
+
+    return hr;
+}
+```
+
+Process() is a long running function which call InitializeWriter and then enter into a infinite loop. At the start of loop, it signal m_evtRequest for frame and then wait for OpenGL thread to reply with m_evtVideoEnded or m_evtReply. If it is m_evtReply that is signalled, then WriteVideoFrame and/or WriteAudioFrame are called to send sample to SinkWriter. At the end, Finalize() is called to finalize video file.
+
+```Cpp
+const bool Process()
+{
+    if (IsValid())
+    {
+        DWORD video_stream = 0;
+        DWORD audio_stream = 0;
+
+        HRESULT hr = InitializeWriter(&video_stream, &audio_stream);
+        if (SUCCEEDED(hr))
+        {
+            // Send frames to the sink writer.
+            LONGLONG rtStart = 0;
+
+            bool success = true;
+
+            HRESULT hr = S_OK;
+
+            bool audio_done = false;
+
+            DWORD audio_stream = 0;
+            LONGLONG audio_timestamp = 0;
+
+            while (true)
+            {
+                SetEvent(m_evtRequest);
+
+                success = true;
+                HANDLE arr[2];
+                arr[0] = m_evtVideoEnded;
+                arr[1] = m_evtReply;
+                DWORD dw = WaitForMultipleObjects(2, arr, FALSE, INFINITE);
+
+                if (WAIT_OBJECT_0 == dw)
+                {
+                    OutputDebugStringA("VideoEnded");
+                    break;
+                }
+                if (WAIT_OBJECT_0 + 1 != dw)
+                {
+                    OutputDebugStringA("E_FAIL");
+                    success = false;
+                    break;
+                }
+
+                if (success)
+                {
+                    hr = WriteVideoFrame(video_stream, rtStart);
+                    if (FAILED(hr))
+                    {
+                        success = false;
+                        break;
+                    }
+                    rtStart += m_FrameDuration;
+
+                    if (m_MP3Filename.empty() == false)
+                    {
+                        if (rtStart < audio_timestamp)
+                            continue;
+
+                        if (!audio_done)
+                        {
+                            hr = WriteAudioFrame(audio_stream, audio_timestamp);
+                            if (FAILED(hr))
+                            {
+                                audio_done = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            
+
+            if (success)
+            {
+                hr = m_pSinkWriter->Finalize();
+            }
+            m_pSinkWriter.Release();
+            return success;
+        }
+    }
+    return false;
+}
+```
 
 ## Running as asm.js on web browser
