@@ -356,7 +356,7 @@ unsigned int Scene::determineMinDim(unsigned int width, unsigned int height)
 #endif // VIDEO_ENCODER
 ```
 
-Lastly, we need to read the rendered buffer with glReadPixels.
+Lastly, we need to read the rendered buffer with glReadPixels. The code wait on mEvtRequest and mEvtExit. mEvtRequest is signaled when the encoding thread requests for new frame. Whereas the mEvtExit is signaled during exit. After copying the buffer to mPixels, mEvtReply is signaled to encoding thread mPixels is ready.
 
 ```Cpp
 void Scene::ReadBuffer(bool& quit)
@@ -420,5 +420,190 @@ void Scene::Render(bool& quit)
 ```
 
 ## How is video encoder written
+
+To use the H264Writer, just include H264Writer.h inside your C++ source code. And to implement the 2 functions below. file can be any format. check_config_file shall return the frame dimensions and frame rate per second.
+
+In the integration section above, there is an example of how encoder_start() is implemented by encoder_main().
+
+```Cpp
+extern int check_config_file(const wchar_t* file, int* width, int* height, int* fps);
+extern int encoder_start(UINT** pixels, HANDLE evtRequest, HANDLE evtReply, HANDLE evtExit, HANDLE evtVideoEnded, const WCHAR* szUrl);
+```
+
+In H264Writer only constructor, as you can see, it initialize a bunch of members to the default value. There is m_hThread which runs the OpenGL Win32 loop. One characteristic of this encoder is the OpenGL window is running in the foreground. The user will see that window. If your application requirement is not to show user the windows, you have to create a invisible window in encoder_main(). m_evtRequest is for requesting frame from the OpenGL thread, m_evtReply is used by OpenGL to tell the frame is copied and ready. m_evtExit is signaled in case user close the window before video encoding is completed. m_evtVideoEnded is signalled by Scene::setVideoEnded() in the Draw() function.
+
+```Cpp
+H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, UINT32 bitrate = 4000000) :
+    m_OpenSrcFileSuccess(false),
+    m_MP3Filename(mp3_file),
+    m_SrcFilename(src_file),
+    m_DestFilename(dest_file),
+    m_Width(0),
+    m_Height(0),
+    m_pImage(nullptr),
+    m_cbWidth(4 * m_Width),
+    m_cbBuffer(m_cbWidth * m_Height),
+    m_pBuffer(nullptr),
+    m_hThread(INVALID_HANDLE_VALUE),
+    m_evtRequest(INVALID_HANDLE_VALUE),
+    m_evtReply(INVALID_HANDLE_VALUE),
+    m_evtExit(INVALID_HANDLE_VALUE),
+    m_evtVideoEnded(INVALID_HANDLE_VALUE),
+    m_CoInited(false),
+    m_MFInited(false),
+    m_pSinkWriter(nullptr),
+    m_VideoFPS(60),
+    m_FrameDuration(10 * 1000 * 1000 / m_VideoFPS),
+    m_VideoBitrate(bitrate),
+    m_EncCommonQuality(100),
+    m_VideoCodec(codec),
+    m_nStreams(0)
+{
+```
+
+Inside the constructor body, check_config_file is called to return width, height and fps.
+
+```Cpp
+int width = 0; int height = 0; int fps = 0;
+if (check_config_file(m_SrcFilename.c_str(), &width, &height, &fps))
+{
+    m_OpenSrcFileSuccess = true;
+    m_Width = width;
+    m_Height = height;
+    m_cbWidth = 4 * m_Width;
+    m_cbBuffer = m_cbWidth * m_Height;
+    m_VideoFPS = fps;
+    m_FrameDuration = (10 * 1000 * 1000 / m_VideoFPS);
+    m_pImage = new (std::nothrow) UINT32[m_Width * m_Height];
+}
+
+if (!m_OpenSrcFileSuccess)
+    return;
+
+if (!m_pImage)
+    return;
+```
+
+Next, CoInitializeEx is called to initialize the COM runtime before any Media Foundation function can be called. MFStartup() called to initialize the Media Foundation(MF) runtime. After that, we create m_pBuffer based on the dimension stored in m_cbBuffer. This is the real-life example of premature optimization. the buffer is kept inside a member to avoid instantiating and allocating a memory buffer on every frame. It turns out that MFCreateMemoryBuffer does not destroy the buffer in every frame but return the buffer to a pool; whenever a buffer of the same dimension is requested, MF just gives you one of buffers created previously.
+
+```Cpp
+HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+
+if (SUCCEEDED(hr))
+{
+    m_CoInited = true;
+    hr = MFStartup(MF_VERSION);
+    if (SUCCEEDED(hr))
+    {
+        m_MFInited = true;
+        // Create a new memory buffer.
+        hr = MFCreateMemoryBuffer(m_cbBuffer, &m_pBuffer);
+    }
+}
+```
+
+After IsValid() returns true, we create the Win32 event handle and OpenGL thread.
+
+```Cpp
+    if (IsValid() == false)
+    {
+        return;
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        m_evtRequest = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+        m_evtReply = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+        m_evtExit = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+        m_evtVideoEnded = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+        m_hThread = CreateThread(NULL, 100000, ThreadOpenGLProc, this, 0, NULL);
+    }
+}
+
+```
+
+Validity is determined by whether COM and MF runtime is initialized successfully.
+
+```Cpp
+const bool IsValid() const
+{
+    return m_CoInited && m_MFInited;
+}
+```
+
+In the H264Writer destructor, m_evtExit is signalled and sleep for 100 millisecond to ensure the OpenGL thread get the event. The all buffers and handles can be released safely. And MF and COM runtime are shut down.
+
+```Cpp
+~H264Writer()
+{
+    SetEvent(m_evtExit);
+    Sleep(100);
+
+    if (m_pImage)
+    {
+        delete[] m_pImage;
+        m_pImage = nullptr;
+    }
+
+    m_pBuffer.Release();
+
+    if (m_evtRequest != INVALID_HANDLE_VALUE)
+        CloseHandle(m_evtRequest);
+
+    if(m_evtReply != INVALID_HANDLE_VALUE)
+        CloseHandle(m_evtReply);
+
+    if(m_evtExit != INVALID_HANDLE_VALUE)
+        CloseHandle(m_evtExit);
+
+    if(m_evtVideoEnded!=INVALID_HANDLE_VALUE)
+        CloseHandle(m_evtVideoEnded);
+
+    m_pSourceReader = nullptr;
+    m_pSinkWriter = nullptr;
+
+    if(m_MFInited)
+        MFShutdown();
+
+    if(m_CoInited)
+        CoUninitialize();
+}
+```
+
+GetSourceDuration is used in H264Writer to get the duration of source MP3, through it can be used to duration of any media, including video. Duration are in 10 millionth of a second.
+
+```Cpp
+HRESULT GetSourceDuration(IMFMediaSource *pSource, MFTIME *pDuration)
+{
+    *pDuration = 0;
+
+    IMFPresentationDescriptor *pPD = NULL;
+
+    HRESULT hr = pSource->CreatePresentationDescriptor(&pPD);
+    if (SUCCEEDED(hr))
+    {
+        hr = pPD->GetUINT64(MF_PD_DURATION, (UINT64*)pDuration);
+        pPD->Release();
+    }
+    return hr;
+}
+```
+
+Here is a short snippet on how to convert duration back to minutes and seconds familiar to humans.
+
+```Cpp
+MFTIME total_seconds = duration / 10000000;
+MFTIME minute = total_seconds / 60;
+MFTIME second = total_seconds % 60;
+```
+
+```Cpp
+```
+
+
 
 ## Running as asm.js on web browser
