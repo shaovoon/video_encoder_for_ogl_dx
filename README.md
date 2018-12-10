@@ -1426,5 +1426,7 @@ const bool Process()
 
 ## Running as asm.js on web browser
 
-This section is mainly on asm.js aspect of OpenGL framework that comes bundled with the demo. If you are only interested in the video encoder, you can safely ignore this section. If you want to run your asm.js with the framework, this is the section for you. The framework is lowest denominator.
+This section focus mainly on asm.js aspect of OpenGL framework that comes bundled with the demo. If you are only interested in the video encoder, you can safely ignore this section. If you want to run your app on the web browser with the framework, this is the section for you. The design choice of framework is based on lowest denominator mainstream WebGL and web browser environment can work with. Since WebGL is a safe subset based on OpenGL 2.0 ES in such a way that WebGL calls can be translated to OpenGL 2.0 calls with little effort. Without coincidence, this is also the highest OpenGL version the framework can support.
+
+
 
