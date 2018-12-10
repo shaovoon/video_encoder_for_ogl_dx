@@ -421,7 +421,52 @@ void Scene::Render(bool& quit)
 
 ## How is video encoder written
 
-To use the H264Writer, just include H264Writer.h inside your C++ source code. And to implement the 2 functions below. file can be any format. check_config_file shall return the frame dimensions and frame rate per second.
+Media Foundation offers 3 methods to writing a video encoder.
+
+1. Media Session
+2. Transcoder API
+3. SinkWriter
+
+All these methods comes with their pros and cons. They range from the most difficult/control to ease to use but with little control.
+
+The first method is to construct your own media session (a topology) which is the most flexible/control, on the other hand it has the highest difficulty reserved for MF professional because you have to find Media Source, Transform and Media Sink and connect them together. However, you have the flexibility to choose your transform vendor. For those who are not familiar: Media Sources are used to demultiplex the source file. Media Foundation Transforms are used to decode and encode streams.  Media Sinks are used to multiplex the streams and write the multiplexed stream to a file or network. There is one downside to using this method, because you have to write and register your Media Source dll on user computer. In most cases, this does not present a problem. But my UWP app's installation and operation is sandboxed, meaning all the file saves and registry writes are redirected to unknown location. I am not sure if MF can find and instantiate my Media Source dll if all its does is only look at global registry and folders.
+
+The second method is using a transcoding API which makes it easier to construct the media session for you with the most sensible options chosen for you. This method is out of question for me because I am not transcoding a video file into another different format.
+
+The third method is the most simple to integrate with your OpenGL render. One very big downside is it always choose Microsoft software transform even when there are hardware accelerated ones on your system, like in my case, I have the Intel and NVidia H264 h/w encoders(See below). This is approach I chose.
+
+
+```
+H/w encoder
+Video Encoder: Intel« Quick Sync Video H.264 Encoder MFT
+Video Encoder: NVIDIA H.264 Encoder MFT
+```
+
+```
+S/w encoder
+Video Encoder: H264 Encoder MFT
+```
+
+Enumeration of the encoders is done with EnumVideoEncoder function(Shown below).
+
+```Cpp
+std::vector<std::wstring> encoders;
+if (H264Writer::EnumVideoEncoder(encoders, Processing::Software, VideoCodec::H264))
+{
+    for (size_t i = 0; i < encoders.size(); ++i)
+    {
+        printf("Video Encoder: %S\n", encoders[i].c_str());
+    }
+}
+else
+{
+    printf("H264Writer::EnumVideoEncoder failed!\n");
+}
+```
+
+Work shall continue on the 1st method to utilize H/w encoder.
+
+To use the H264Writer(header only library), just include H264Writer.h inside your C++ source code. And remember to implement the 2 functions below. file can be any format. check_config_file shall return the frame dimensions and frame rate per second.
 
 In the integration section above, there is an example of how encoder_start() is implemented by encoder_main().
 
@@ -1367,8 +1412,6 @@ const bool Process()
                 }
             }
 
-            
-
             if (success)
             {
                 hr = m_pSinkWriter->Finalize();
@@ -1382,3 +1425,6 @@ const bool Process()
 ```
 
 ## Running as asm.js on web browser
+
+This section is mainly on asm.js aspect of OpenGL framework that comes bundled with the demo. If you are only interested in the video encoder, you can safely ignore this section. If you want to run your asm.js with the framework, this is the section for you. The framework is lowest denominator.
+
