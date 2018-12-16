@@ -1453,11 +1453,28 @@ Change your IP address/domain/port accordingly in SRC_FOLDER in the Program.cpp.
 #endif
 ```
 
+**Recompile the code as asm.js**
+
+Recompile the code for new URL to take effect, if you are on Windows 10 and is comfortable tinkering with Bash commands, [enable Windows Subsystem for Linux](https://www.laptopmag.com/articles/use-bash-shell-windows-10) and install Ubuntu from MS Store and [install Emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html). Run GNU make
+
+In the Makefile, change to -s WASM=0
+
+```
+make all
+```
+
+**Recompile the code as Webassembly**
+
+Remove or change to -s WASM=1 because default option is compiling to Webassembly when WASM is not specified. The reason I did not do so, because IIS do not recognise the wasm mime type despite having added it.
+
 **No Assimp support**
 
 [Assimp](http://www.assimp.org/) is not supported simply because there is no [Emscripten port](https://github.com/emscripten-ports) for Assimp. Instead, [Tiny OBJ Loader](https://github.com/syoyo/tinyobjloader) is used to load simple 3D model. OBJ file extensions ends in *.obj and *.mtl and I have modified the library to load in *.obj.txt and *.mtl.txt because I want to avoid adding new mime types in the web server.
 
-
 **Downloading your assets**
 
 For drawing anything on screen, derive your class from DrawableSceneComponent and **must** call DownloadFiles() in the constructor to download your assets from relative subfolders because asm.js must have all assets downloaded before the main rendering loop is run. DownloadFiles calls OpenFile on the files directly on a desktop app. If the code is compiled with EMSCRIPTEN macro defined, it will first download files and then open.
+
+**No downloading of shader**
+
+The shader code are inline with C++11 raw string literals to save downloading effort.
