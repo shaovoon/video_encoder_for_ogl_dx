@@ -38,21 +38,22 @@ The documentation is divided into 3 main sections. First section is get the demo
 
 [Youtube demo](https://www.youtube.com/watch?v=IbZ1_FdEf7g)
 
-![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/spaceship.png)
+![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/spaceship.png)
 
 **H264 video**
 
 [Youtube demo](https://www.youtube.com/watch?v=PQ2ZgFLSOEM)
 
-![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/h264.png)
+![Image of H264](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/h264.png?raw=true)
 
 
-**HEVC video**
+**HEVC video (Artifacts)**
 
 [Youtube demo](https://www.youtube.com/watch?v=yoqNbxpckgM)
 
-![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/hevc.png)
+![Image of HEVC](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/hevc.png)
 
+As you can see the sinewave artifacts in HEVC, not present in H264. By the way, the sinewave is rendered by triangles, not fragment shaders.
 
 All the required libraries are included in the repository. The required dlls are copied automatically to the Release or Debug folder for Win32 post builds. x64 build is unbuildable due to inability to find a x64 zlib lib/dll on the web; this is a linking problem lies with the OpenGL renderer, not video encoder.
 
