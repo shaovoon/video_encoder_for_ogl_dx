@@ -40,26 +40,11 @@ The documentation is divided into 3 main sections. First section is get the demo
 
 ![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/spaceship.png)
 
-**H264 video of Mandy Frenzy**
-
-[Youtube demo](https://www.youtube.com/watch?v=PQ2ZgFLSOEM)
-
-![Image of H264](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/h264.png?raw=true)
-
-
-**HEVC video (Artifacts) of Mandy Frenzy**
-
-[Youtube demo](https://www.youtube.com/watch?v=yoqNbxpckgM)
-
-![Image of HEVC](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/hevc.png)
-
-As you can see the sinewave artifacts in HEVC, not present in H264. By the way, the sinewave is rendered by triangles, not lines and by not fragment shaders. Reason being lines are usually implemented as 1 pixel wide in OpenGL ES 2.0. Using triangles allows me to control the width/height.
-
 All the required libraries are included in the repository. The required dlls are copied automatically to the Release or Debug folder for Win32 post builds. x64 build is unbuildable due to inability to find a x64 zlib lib/dll on the web; this is a linking problem lies with the OpenGL renderer, not video encoder.
 
 To see the OpenGL demo, open up SDL_App.sln in Visual Studio and build the SDL_App project
 
-To run the video encoding demo, open up H264SinkWriter.cpp and in the main function, modify the configFile, musicFile and videoFile to the paths on your machine. configFile is found in the $(SolutionDir)SDL_App folder. musicFile should be a mp3 file and if it is left blank, the final video shall not have music. videoFile is the encoded video. You can specify HVEC(aka H265) instead of H264 in the 4th parameter. HVEC is having some encoding issues where the colors bleed.
+To run the video encoding demo, open up H264SinkWriter.cpp and in the main function, modify the configFile, musicFile and videoFile to the paths on your machine. configFile is found in the $(SolutionDir)SDL_App folder. musicFile should be a mp3 file and if it is left blank, the final video shall not have music. videoFile is the encoded video. You can specify HVEC(aka H265) instead of H264 in the 4th parameter. HVEC is having some encoding issues where the colors bleed(See screenshots below.).
 
 ```Cpp
 // This is the config file to be found in SDL_App project folder.
@@ -175,6 +160,23 @@ void RenderingScene::CreateComponents()
 
 }
 ```
+
+## HEVC Artifacts
+
+**H264 video of Mandy Frenzy**
+
+[Youtube demo](https://www.youtube.com/watch?v=PQ2ZgFLSOEM)
+
+![Image of H264](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/h264.png?raw=true)
+
+
+**HEVC video (Artifacts) of Mandy Frenzy**
+
+[Youtube demo](https://www.youtube.com/watch?v=yoqNbxpckgM)
+
+![Image of HEVC](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/hevc.png)
+
+As you can see the sinewave artifacts in HEVC, not present in H264. Increase the bitrate solves the problem at the expense of larger file size. By the way, the sinewave is rendered by triangles, not lines and by not fragment shaders. Reason being lines are usually implemented as 1 pixel wide in OpenGL ES 2.0. Using triangles allows me to control the width/height.
 
 ## Integration with your OpenGL Framework
 
@@ -444,7 +446,7 @@ void Scene::Render(bool& quit)
 
 ## How is video encoder written
 
-Media Foundation offers 3 methods to writing a video encoder.
+Media Foundation provides 3 methods to writing a video encoder.
 
 1. Media Session
 2. Transcoder API
@@ -1475,11 +1477,11 @@ make all
 
 **Recompile the code as Webassembly**
 
-Remove or change to -s WASM=1 because default option is compiling to Webassembly when WASM is not specified. The reason I did not do so, because IIS do not recognise the wasm mime type despite having added it.
+Remove or change to -s WASM=1 because default option is compiling to Webassembly when WASM is not specified. The reason I did not do so, because IIS do not recognise the wasm mime type added to it.
 
 **No Assimp support**
 
-[Assimp](http://www.assimp.org/) is not supported simply because there is no [Emscripten port](https://github.com/emscripten-ports) for Assimp. Instead, [Tiny OBJ Loader](https://github.com/syoyo/tinyobjloader) is used to load simple 3D model. OBJ file extensions ends in *.obj and *.mtl and I have modified the library to load in *.obj.txt and *.mtl.txt because I want to avoid adding new mime types in the web server.
+[Assimp](http://www.assimp.org/) is not supported simply because there is no [Emscripten port](https://github.com/emscripten-ports) for Assimp. Instead, [Tiny OBJ Loader](https://github.com/syoyo/tinyobjloader) is used to load simple 3D model in Wavefront OBJ format. OBJ file extensions ends in *.obj and *.mtl and I have modified the library to load in *.obj.txt and *.mtl.txt because I want to avoid adding new mime types in the web server.
 
 **Downloading your assets**
 
