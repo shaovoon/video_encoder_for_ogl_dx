@@ -106,7 +106,7 @@ namespace Rendering
 #ifdef VIDEO_ENCODER
 		static GLfloat start_time = gameTime.TotalGameTime();
 		GLfloat elapsed_time = gameTime.TotalGameTime() - start_time;
-		if(elapsed_time > 5.0f) // During video encoding, only run for 5 seconds.
+		if(elapsed_time > 12.0f) // During video encoding, only run for 5 seconds.
 		{
 			Scene::setVideoEnded();
 		}
