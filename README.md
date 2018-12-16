@@ -20,17 +20,30 @@ All the OpenGL Renderer required libraries are included in the repository. The f
 
 ## Introduction
 
-I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow due to Microsoft did not expose the H264 and HEVC codec on DirectShow. It is tested on Windows 10. It should work fine on Windows 7/8 as well. Do let me know if you encounter any problem on those OSes.
+I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow due to Microsoft did not expose the H264 and HEVC codec on DirectShow. It is tested on Windows 10. It should work fine on Windows 7/8 as well. Do let me know if you encounter any problem on those OSes. Windows 10 used to come bundled with HEVC codec. For unknown reasons, MS has taken it out in Windows 10 Fall Creators Update for the **new** Windows 10 installation and [put it up for purchase](https://www.microsoft.com/en-us/p/hevc-video-extensions/9nmzlz57r3t7?activetab=pivot:overviewtab) ($1.50) in the Microsoft Store.
 
 **What are the pros and cons of this encoder over FFmpeg?**
 
 [FFmpeg](https://www.ffmpeg.org/) is GPL and so you may not concerned if you just want to encode the output of your personal renderer. For my freemium app, I prefer to steer clear of the licensing issues. How hobbyist usually encode their frames with FFmpeg is to save all the frames in HDD first which limits the number of frames and also directly impacted video duration that can be saved depending on the free HDD space. The extra step of saving and opening the files has negative impact of the encoding speed. Of course, tight integration with FFmpeg code may eliminate the frame saving part. On the other hand, this encoder reads RGB values from the framebuffer provided. The downside is it is not portable and only works on Windows 7/8/10.
 
+**3 rendering modes**
+
 The same OpenGL renderer can be compiled into 3 modes: normal OpenGL display mode, Video Encoder mode and Emscripten mode. The latter two's code sections are respectively guarded by VIDEO_ENCODER and EMSCRIPTEN macros. You can, by all means, use your own renderer with the video encoder. The default OpenGL renderer is just provided to show a working demo.
 
-The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework used in Paul Varcholik's OpenGL Essentials LiveLessons. A tutorial on how to integrate with DirectX comes later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section (empty) is on the explanation of the internals of the video encoder. And the last section explains the Emscripten part required to compile into asm.js or Webassembly.
+The documentation is divided into 3 main sections. First section is get the demo up and running and on how to modify the parameters. Second section is on how to integrate it with your OpenGL framework. The demo uses a renderer framework taught in [Paul Varcholik's OpenGL Essentials LiveLessons](http://www.informit.com/store/opengl-essentials-livelessons-video-training-downloadable-9780133824148). The original source code used GLFW and is based on OpenGL 4.4: I converted his framework to use SDL and downgrade to OpenGL 2.0. The decision is based on the lowest denominator of what WebGL and Emscripten can support. A tutorial on how to integrate with DirectX will come later. In theory, this video encoder should integrate well with other graphics API like Vulkan, afterall, all it needs to be supplied with a video buffer and some synchronization in tandem to perform its work. Third section is on the explanation of the internals of the video encoder which you can skipped if you are not into the encoder internals and implementation. And the last section explains the Emscripten part required to compile into asm.js or Webassembly.
 
 ## Running the Demo
+
+
+
+**H264 video**
+
+
+
+
+**HEVC video**
+
+
 
 All the required libraries are included in the repository. The required dlls are copied automatically to the Release or Debug folder for Win32 post builds. x64 build is unbuildable due to inability to find a x64 zlib lib/dll on the web; this is a linking problem lies with the OpenGL renderer, not video encoder.
 
