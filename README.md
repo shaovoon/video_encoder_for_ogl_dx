@@ -20,7 +20,7 @@ All the OpenGL Renderer required libraries are included in the repository. The f
 
 ## Introduction
 
-I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow due to Microsoft did not expose the H264 and HEVC codec on DirectShow. It is tested on Windows 10. It should work fine on Windows 7/8 as well. Do let me know if you encounter any problem on those OSes. Windows 10 used to come bundled with HEVC codec. For unknown reasons, MS has taken it out in Windows 10 Fall Creators Update for the **new** Windows 10 installation and [put it up for purchase](https://www.microsoft.com/en-us/p/hevc-video-extensions/9nmzlz57r3t7?activetab=pivot:overviewtab) ($1.50) in the Microsoft Store.
+I worked on this video encoder while writing my Windows Store App, Mandy Frenzy, a photo slideshow app for ladies. Right now, I am feeling burnt out so I am taking a short hiatus. Meanwhile I write a series of short articles as a way to document this app. This video encoder is header file only (H264Writer.h), based on Microsoft Media Foundation, not the old DirectShow due to Microsoft did not expose the H264 and HEVC codec on DirectShow. It is tested on Windows 10. It should work fine on Windows 7/8 as well. Do let me know if you encounter any problem on those OSes. Windows 10 used to come bundled with HEVC codec. For unknown reasons, MS has taken it out in Windows 10 Fall Creators Update for the **new** Windows 10 installation and [put it up for purchase](https://www.microsoft.com/en-us/p/hevc-video-extensions/9nmzlz57r3t7?activetab=pivot:overviewtab) for $1.50 in the Microsoft Store. In the section below, some screenshots will show encoding artifacts present in MS HEVC video.
 
 **What are the pros and cons of this encoder over FFmpeg?**
 
@@ -1441,10 +1441,23 @@ const bool Process()
 
 This section focus mainly on asm.js aspect of OpenGL framework that comes bundled with the demo. If you are only interested in the video encoder, you can safely ignore this section. If you want to run your app on the web browser with the framework, this is the section for you. The design choice of framework is based on lowest technologies mainstream WebGL and web browser environment can work with. Since WebGL is a safe subset based on OpenGL 2.0 ES in such a way that WebGL calls can be translated to OpenGL 2.0 calls with little effort. Without coincidence, this is also the maximum OpenGL version the framework can support.
 
+**Change your URL**
+
+Change your IP address/domain/port accordingly in SRC_FOLDER in the Program.cpp. SRC_FOLDER is used to download your assets from. Switch to http if you are not using https.
+
+```Cpp
+#ifdef __EMSCRIPTEN__
+	#define SRC_FOLDER "https://localhost:44319/"
+#else
+	#define SRC_FOLDER ".\\"
+#endif
+```
 
 **No Assimp support**
 
 [Assimp](http://www.assimp.org/) is not supported simply because there is no [Emscripten port](https://github.com/emscripten-ports) for Assimp. Instead, [Tiny OBJ Loader](https://github.com/syoyo/tinyobjloader) is used to load simple 3D model. OBJ file extensions ends in *.obj and *.mtl and I have modified the library to load in *.obj.txt and *.mtl.txt because I want to avoid adding new mime types in the web server.
 
 
+**Downloading your assets**
 
+For drawing anything on screen, derive your class from DrawableSceneComponent and **must** call DownloadFiles() in the constructor to download your assets from relative subfolders because asm.js must have all assets downloaded before the main rendering loop is run. DownloadFiles calls OpenFile on the files directly on a desktop app. If the code is compiled with EMSCRIPTEN macro defined, it will first download files and then open.
