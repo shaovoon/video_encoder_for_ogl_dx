@@ -34,15 +34,24 @@ The documentation is divided into 3 main sections. First section is get the demo
 
 ## Running the Demo
 
+**Spaceship video**
 
+[Youtube demo](https://www.youtube.com/watch?v=IbZ1_FdEf7g)
+
+![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/spaceship.png)
 
 **H264 video**
 
+[Youtube demo](https://www.youtube.com/watch?v=PQ2ZgFLSOEM)
 
+![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/h264.png)
 
 
 **HEVC video**
 
+[Youtube demo](https://www.youtube.com/watch?v=yoqNbxpckgM)
+
+![Image of Spaceship](https://github.com/shaovoon/video_encoder_for_ogl_dx/images/hevc.png)
 
 
 All the required libraries are included in the repository. The required dlls are copied automatically to the Release or Debug folder for Win32 post builds. x64 build is unbuildable due to inability to find a x64 zlib lib/dll on the web; this is a linking problem lies with the OpenGL renderer, not video encoder.
