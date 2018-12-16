@@ -1488,3 +1488,7 @@ For drawing anything on screen, derive your class from DrawableSceneComponent an
 **No downloading of shader**
 
 The shader code are inline with C++11 raw string literals to save downloading effort.
+
+## Reference Book
+
+[Developing Microsoft Media Foundation Applications](https://www.amazon.com/gp/product/0735656592/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=qhyti98po-20&creative=9325&linkCode=as2&creativeASIN=0735656592&linkId=3a5b32bf135fdbb0772831efc7e6c96f) by Microsoft Press
