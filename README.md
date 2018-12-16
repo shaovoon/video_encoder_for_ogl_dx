@@ -108,7 +108,7 @@ void RenderingScene::Draw(const SceneTime& gameTime)
 }
 ```
 
-You have to experiment to find out the optimal bitrate that can encode a good quality video. 4000000 is overkill.
+You have to experiment to find out the optimal bitrate that can encode a good quality video.
 
 ```Cpp
 enum class VideoCodec
