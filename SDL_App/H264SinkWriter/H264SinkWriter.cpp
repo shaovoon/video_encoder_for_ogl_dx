@@ -33,9 +33,10 @@ int main()
 	// This is the config file to be found in SDL_App project folder.
 	std::wstring configFile(L"D:\\GitHub\\video_encoder_for_ogl_dx\\SDL_App\\SDL_App\\config.txt");
 	// This is your music file
-	std::wstring musicFile(L"D:\\FMA.mp3");
+	//std::wstring musicFile(L"D:\\FMA.mp3");
+	std::wstring musicFile(L"");
 	// This is the video encoded output file.
-	std::wstring videoFile(L"C:\\Users\\shaov\\Documents\\video.mp4");
+	std::wstring videoFile(L"C:\\Users\\shaov\\Videos\\spaceship.mp4");
 
 	H264Writer writer(musicFile.c_str(), configFile.c_str(), videoFile.c_str(), VideoCodec::H264);
 	if (writer.IsValid())
@@ -47,6 +48,7 @@ int main()
 		}
 	}
 	printf("Video write failed!\n");
+	
 	getchar();
 	
 	return 1;

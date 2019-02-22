@@ -95,11 +95,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\SDL2_mixer-2.0.0\lib\x86;..\Libraries\SDL2_image-2.0.0\lib\x86;..\Libraries\assimp\lib\assimp_release-dll_win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x64;..\Libraries\SDL2_mixer-2.0.0\lib\x64;..\Libraries\SDL2_image-2.0.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
@@ -107,11 +107,11 @@
     <LibraryPath>C:\Users\wong\Documents\Bitbucket\App\SDL_App\ext\zlib\lib;C:\Users\wong\Documents\Libraries\SDL2-2.0.3\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_mixer-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\SDL2_image-2.0.0\lib\x86;C:\Users\wong\Documents\Libraries\assimp\lib\assimp_release-dll_win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x86;..\Libraries\SDL2_mixer-2.0.0\lib\x86;..\Libraries\SDL2_image-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\Libraries\SDL2_mixer-2.0.0\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\ext\zlib\include;..\ext\glew;..\Libraries\SDL2-2.0.3\include;..\ext\glm-0.9.8.4;..\Libraries\SDL2_image-2.0.0\include;..\ext\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\ext\zlib\lib;..\Libraries\SDL2-2.0.3\lib\x64;..\Libraries\SDL2_mixer-2.0.0\lib\x64;..\Libraries\SDL2_image-2.0.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
@@ -131,7 +131,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -147,7 +147,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Emscripten'">
@@ -163,7 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,7 +185,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -207,7 +207,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;Shlwapi.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Emscripten'">
@@ -228,7 +228,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_mixer.lib;SDL2_image.lib;Shlwapi.lib;assimp.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>zdll.lib;SDL2.lib;SDL2_image.lib;Shlwapi.lib;assimp.lib;opengl32.lib;Glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
