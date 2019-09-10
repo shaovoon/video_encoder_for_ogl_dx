@@ -5,7 +5,7 @@
 /********************************/
 #include "Utility.h"
 #include <algorithm>
-#include <exception>
+#include <stdexcept>
 #include <cctype>
 #include <cstdio>
 #include "zlib.h"

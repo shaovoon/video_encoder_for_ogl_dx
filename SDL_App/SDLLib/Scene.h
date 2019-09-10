@@ -23,6 +23,7 @@ namespace Library
 	public:
 		typedef std::function<void(int, int, int, int)> KeyboardHandler;
 		
+		// windowTitle should be set to unique HTML5 canvas ID prefixed with # when building for Webassembly!
 		Scene(const std::wstring& windowTitle, unsigned int screenWidth, unsigned int screenHeight);
 
 		~Scene();

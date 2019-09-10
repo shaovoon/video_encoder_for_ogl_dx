@@ -5,7 +5,7 @@
 /********************************/
 #pragma once
 
-#include <exception>
+#include <stdexcept>
 #ifdef _WIN32
 #include <Windows.h>
 #endif

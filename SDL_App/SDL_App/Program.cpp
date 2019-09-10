@@ -55,7 +55,7 @@ void emscripten_main()
 		}
 
 		Texture::setScreenDim(gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
-		RenderingScene* renderingScene = new RenderingScene(L"Photo Montage", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
+		RenderingScene* renderingScene = new RenderingScene(L"#canvas", gConfigSingleton.GetScreenWidth(), gConfigSingleton.GetScreenHeight());
 		g_RenderingScene = renderingScene;
 
 		renderingScene->Run();
