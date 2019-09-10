@@ -46,7 +46,8 @@ namespace Library
 		emscripten_set_canvas_element_size(canvas_id.c_str(), SCREEN_WIDTH, SCREEN_HEIGHT);
 		EmscriptenWebGLContextAttributes attr;
 		emscripten_webgl_init_context_attributes(&attr);
-		attr.alpha = attr.stencil = attr.antialias = attr.preserveDrawingBuffer = attr.failIfMajorPerformanceCaveat = 0;
+		attr.alpha = attr.stencil = attr.preserveDrawingBuffer = attr.failIfMajorPerformanceCaveat = 0;
+		attr.antialias = 1;
 		attr.depth = 1;
 		attr.enableExtensionsByDefault = 1;
 		attr.premultipliedAlpha = 0;
