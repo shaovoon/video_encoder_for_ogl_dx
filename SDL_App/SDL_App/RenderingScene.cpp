@@ -95,9 +95,9 @@ namespace Rendering
 
 	void RenderingScene::Draw(const SceneTime& gameTime)
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		float grey = 35.0f / 255.0f;
 		glClearColor(grey, grey, grey, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Scene::Draw(gameTime);
 
