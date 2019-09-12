@@ -43,7 +43,7 @@ namespace Library
 
 		std::string canvas_id = Library::Utility::ToString(windowTitle);
 
-		emscripten_set_canvas_element_size(canvas_id.c_str(), SCREEN_WIDTH, SCREEN_HEIGHT);
+		emscripten_set_canvas_element_size(canvas_id.c_str(), screenWidth, screenHeight);
 		EmscriptenWebGLContextAttributes attr;
 		emscripten_webgl_init_context_attributes(&attr);
 		attr.alpha = attr.stencil = attr.preserveDrawingBuffer = attr.failIfMajorPerformanceCaveat = 0;
@@ -221,6 +221,7 @@ namespace Library
 
 	void Scene::InitializeWindow()
 	{
+#ifndef __EMSCRIPTEN__
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
 			throw SceneException(MY_FUNC, "SDL_Init() failed.");
@@ -230,10 +231,9 @@ namespace Library
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
-#ifndef __EMSCRIPTEN__
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-#endif
+
 		if (mStencilBufferEnabled)
 		{
 			SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 1);
@@ -252,6 +252,8 @@ namespace Library
 		{
 			SDL_HideWindow(mWindow);
 		}
+#endif
+
 #ifdef _WIN32
 		POINT center = CenterWindow(mScreenWidth, mScreenHeight);
 
@@ -261,6 +263,7 @@ namespace Library
 
 	void Scene::InitializeOpenGL()
 	{
+#ifndef __EMSCRIPTEN__
 		//Create context
 		mContext = SDL_GL_CreateContext(mWindow);
 		if (mContext == NULL)
@@ -269,6 +272,7 @@ namespace Library
 			SPRINTF(buf, "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
 			throw SceneException(MY_FUNC, buf);
 		}
+#endif
 
 
 
@@ -278,12 +282,14 @@ namespace Library
 		bool vsync = true;
 #endif
 
+#ifndef __EMSCRIPTEN__
 		if (!EnableVSync(vsync))
 		{
 			char buf[256];
 			SPRINTF(buf, "Warning: Unable to set VSync to %d! SDL Error: %s\n", vsync, SDL_GetError());
 			throw SceneException(MY_FUNC, buf);
 		}
+#endif
 
 		GLenum err = glewInit();
 		if (GLEW_OK != err)
