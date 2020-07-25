@@ -277,7 +277,11 @@ public:
 				MFTIME second = total_seconds % 60;
 				printf("Audio duration:%lld:%lld\n", minute, second);
 			}
-			hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, nullptr, &m_pSinkWriter);
+			CComPtr<IMFAttributes> attrs;
+			MFCreateAttributes(&attrs, 0);
+			attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true);
+
+			hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
 			BREAK_ON_FAIL(hr);
 
 			// map the streams found in the source file from the source reader to the
@@ -324,7 +328,9 @@ public:
 			hr = (*pMediaTypeOut)->SetUINT32(MF_MT_MPEG2_PROFILE, eAVEncH264VProfile_High);
 			BREAK_ON_FAIL(hr);
 		}
-	
+
+		//(*pMediaTypeOut)->SetUINT32(MF_MT_VIDEO_NOMINAL_RANGE, MFNominalRange_Wide);
+		//BREAK_ON_FAIL(hr);
 
 		//hr = pMediaTypeOut->SetUINT32(CODECAPI_AVEncCommonRateControlMode, eAVEncCommonRateControlMode_Quality);
 		hr = (*pMediaTypeOut)->SetUINT32(CODECAPI_AVEncCommonRateControlMode, eAVEncCommonRateControlMode_UnconstrainedVBR);
