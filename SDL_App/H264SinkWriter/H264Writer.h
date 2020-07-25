@@ -279,7 +279,7 @@ public:
 			}
 			CComPtr<IMFAttributes> attrs;
 			MFCreateAttributes(&attrs, 1);
-			attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true);
+			attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
 
 			hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
 			BREAK_ON_FAIL(hr);
