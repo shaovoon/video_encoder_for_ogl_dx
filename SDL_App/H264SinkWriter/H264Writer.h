@@ -278,7 +278,7 @@ public:
 				printf("Audio duration:%lld:%lld\n", minute, second);
 			}
 			CComPtr<IMFAttributes> attrs;
-			MFCreateAttributes(&attrs, 0);
+			MFCreateAttributes(&attrs, 1);
 			attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true);
 
 			hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
