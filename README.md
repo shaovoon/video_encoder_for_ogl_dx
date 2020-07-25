@@ -174,6 +174,8 @@ void RenderingScene::CreateComponents()
 
 ![Image of HEVC](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/hevc.jpg)
 
+_Update:_ The HEVC quality problem is fixed with h/w acceleration.
+
 As you can see the sinewave artifacts in HEVC, not present in H264. Increase the bitrate solves the problem at the expense of larger file size. By the way, the sinewave is rendered by triangles, not lines and not by fragment shaders. Reason being lines are usually implemented as 1 pixel wide in OpenGL ES 2.0. Using triangles allows me to control the width/height.
 
 ## Integration with your OpenGL Framework
@@ -1488,6 +1490,22 @@ For drawing anything on screen, derive your class from DrawableSceneComponent an
 **No downloading of shader**
 
 The shader code are inline with C++11 raw string literals to save downloading effort.
+
+## Hardware Acceleration
+
+Hardware acceleration is available now by adding these 3 lines to set MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS in attributes and pass it to MFCreateSinkWriterFromURL(). The HEVC quality problem mentioned earlier is fixed with h/w acceleration.
+
+```
+CComPtr<IMFAttributes> attrs;
+MFCreateAttributes(&attrs, 1);
+attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+
+hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
+```
+
+When you run video encoder without OpenGL, you should see "GPU 1 - Video Encode" on Windows 10 task manager. With OpenGL, you see "GPU 1 - Copy"
+
+![Image of TaskMgr](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/TaskMgr.png)
 
 ## Reference Book
 
