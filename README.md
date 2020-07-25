@@ -174,7 +174,7 @@ void RenderingScene::CreateComponents()
 
 ![Image of HEVC](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/hevc.jpg)
 
-_Update:_ The HEVC quality problem is fixed with h/w acceleration.
+__Update:__ The HEVC quality problem is fixed with h/w acceleration.
 
 As you can see the sinewave artifacts in HEVC, not present in H264. Increase the bitrate solves the problem at the expense of larger file size. By the way, the sinewave is rendered by triangles, not lines and not by fragment shaders. Reason being lines are usually implemented as 1 pixel wide in OpenGL ES 2.0. Using triangles allows me to control the width/height.
 
