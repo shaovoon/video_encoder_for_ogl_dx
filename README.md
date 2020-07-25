@@ -458,7 +458,7 @@ The first method is to construct your own media session which is a topology. Thi
 
 The second method is using a Transcoding API which makes it easier to construct the media session for you with the most sensible options chosen for you. This method is out of question for me because I am not transcoding a video file into another format.
 
-The third method, SinkWriter, is the most simple to integrate with your OpenGL render. ~~One very big downside is it always choose Microsoft **software** transform even when there are hardware accelerated ones available on your system, like in my case, I have the Intel and NVidia H264 h/w encoders(See below). This is the approach I chose.~~ I was mislead by the book, the third method can also use hardware acceleration in 1.0.3 version.
+The third method, SinkWriter, is the most simple to integrate with your OpenGL render. ~~One very big downside is it always choose Microsoft **software** transform even when there are hardware accelerated ones available on your system, like in my case, I have the Intel and NVidia H264 h/w encoders(See below). This is the approach I chose.~~ I was mislead by the book: the third method can also use hardware acceleration in latest 1.0.3 version.
 
 
 ```
