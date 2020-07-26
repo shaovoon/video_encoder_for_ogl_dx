@@ -1512,7 +1512,7 @@ When you run video encoder without OpenGL, you should see "GPU 1 - Video Encode"
 * int numWorkerThreads: 0 leaves to default
 * int qualityVsSpeed: [0:100] 0 for speed, 100 for quality
 * RateControlMode mode: 3 modes to choose from UnconstrainedVBR, Quality, CBR (VBR is variable bitrate and CBR is constant bitrate)
-* int quality: Only valid when mode is Quality. [0:100] 0 for smaller file size and less quality, 100 for bigger file size and high quality
+* int quality: Only valid when mode is Quality. [0:100] 0 for smaller file size and lower quality, 100 for bigger file size and higher quality
 
 ## Reference Book
 
