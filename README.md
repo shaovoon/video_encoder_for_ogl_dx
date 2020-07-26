@@ -1507,6 +1507,13 @@ When you run video encoder without OpenGL, you should see "GPU 1 - Video Encode"
 
 ![Image of TaskMgr](https://github.com/shaovoon/video_encoder_for_ogl_dx/blob/master/images/TaskMgr.png)
 
+## Quality parameters in Constructor in v0.4.2
+
+* int numWorkerThreads: 0 leaves to default
+* int qualityVsSpeed: [0:100] 0 for speed, 100 for quality
+* RateControlMode mode: 3 modes to choose from UnconstrainedVBR, Quality, CBR (VBR is variable bitrate and CBR is constant bitrate)
+* int quality: Only valid when mode is Quality. [0:100] 0 for smaller file size and less quality, 100 for bigger file size and high quality
+
 ## Reference Book
 
 [Developing Microsoft Media Foundation Applications](https://www.amazon.com/gp/product/0735656592/ref=as_li_qf_asin_il_tl?ie=UTF8&tag=qhyti98po-20&creative=9325&linkCode=as2&creativeASIN=0735656592&linkId=3a5b32bf135fdbb0772831efc7e6c96f) by Microsoft Press
