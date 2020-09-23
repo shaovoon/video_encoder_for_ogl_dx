@@ -1,4 +1,4 @@
-# H264 Video Encoder for OpenGL and DirectX
+# H264/HEVC Video Encoder for OpenGL
 
 ## Requirements
 
