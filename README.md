@@ -14,7 +14,7 @@ _OpenGL Renderer_
 * Obj loader
 * Zlib
 
-All the OpenGL Renderer required libraries are included in the repository. The focus is on _Video Encoder_.
+All the OpenGL Renderer required libraries are included in the repository. This is a header only video encoder for Windows. You absolutely do not need the included OpenGL framework to use it. The OpenGL framework is to show you on how to integrate it with your OpenGL framework. All the video encoder needs from your side is a image buffer (to read from) and a few windows synchronization primitives. The focus of this README is on _Video Encoder_.
 
 ## Introduction
 
