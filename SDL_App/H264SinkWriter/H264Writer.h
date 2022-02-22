@@ -96,7 +96,7 @@ public:
 
 	const std::wstring& GetUrl()       const { return m_SrcFilename; }
 
-	H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, UINT32 bitrate = 4000000,
+	H264Writer(const wchar_t* mp3_file, const wchar_t* src_file, const wchar_t* dest_file, VideoCodec codec, Processing processing, UINT32 bitrate = 4000000,
 		int numWorkerThreads = 0 /* 0 leaves to default */,
 		int qualityVsSpeed = 100 /* [0:100] 0 for speed, 100 for quality */,
 		RateControlMode mode = RateControlMode::Quality,
@@ -123,6 +123,7 @@ public:
 		m_FrameDuration(10 * 1000 * 1000 / m_VideoFPS),
 		m_VideoBitrate(bitrate),
 		m_VideoCodec(codec),
+		m_Processing(processing),
 		m_nStreams(0),
 		m_NumWorkerThreads(numWorkerThreads),
 		m_QualityVsSpeed(qualityVsSpeed),
@@ -289,11 +290,19 @@ public:
 				MFTIME second = total_seconds % 60;
 				printf("Audio duration:%lld:%lld\n", minute, second);
 			}
-			CComPtr<IMFAttributes> attrs;
-			MFCreateAttributes(&attrs, 1);
-			attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+			if (m_Processing == Processing::HardwareAcceleration)
+			{
 
-			hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
+				CComPtr<IMFAttributes> attrs;
+				MFCreateAttributes(&attrs, 1);
+				attrs->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+
+				hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, attrs, &m_pSinkWriter);
+			}
+			else
+			{
+				hr = MFCreateSinkWriterFromURL(m_DestFilename.c_str(), nullptr, nullptr, &m_pSinkWriter);
+			}
 			BREAK_ON_FAIL(hr);
 
 			// map the streams found in the source file from the source reader to the
@@ -320,6 +329,9 @@ public:
 	}
 	HRESULT SetQuality(DWORD& streamIndex)
 	{
+		if (m_Processing == Processing::Software)
+			return S_FALSE;
+
 		CComPtr<ICodecAPI> ca;
 		HRESULT hr = m_pSinkWriter->GetServiceForStream(streamIndex, GUID_NULL, __uuidof(ICodecAPI), (void**)&ca);
 		if (ca)
@@ -939,6 +951,24 @@ public:
 		}
 		return SUCCEEDED(hr);
 	}
+	static bool HasH264(Processing processing)
+	{
+		std::vector<std::wstring> encoders;
+		if (H264Writer::EnumVideoEncoder(encoders, processing, VideoCodec::H264))
+		{
+			return encoders.size() > 0;
+		}
+		return false;
+	}
+	static bool HasHEVC(Processing processing)
+	{
+		std::vector<std::wstring> encoders;
+		if (H264Writer::EnumVideoEncoder(encoders, processing, VideoCodec::HEVC))
+		{
+			return encoders.size() > 0;
+		}
+		return false;
+	}
 	const bool Process()
 	{
 		if (IsValid())
@@ -1053,6 +1083,7 @@ private:
 	UINT32 m_VideoFPS;
 	UINT64 m_FrameDuration;
 	VideoCodec m_VideoCodec;
+	Processing m_Processing;
 	int m_nStreams;
 	int m_NumWorkerThreads;
 	int m_QualityVsSpeed;

@@ -38,7 +38,7 @@ int main()
 	// This is the video encoded output file.
 	std::wstring videoFile(L"C:\\Users\\shaov\\Videos\\spaceship.mp4");
 
-	H264Writer writer(musicFile.c_str(), configFile.c_str(), videoFile.c_str(), VideoCodec::H264);
+	H264Writer writer(musicFile.c_str(), configFile.c_str(), videoFile.c_str(), VideoCodec::H264, Processing::HardwareAcceleration);
 	if (writer.IsValid())
 	{
 		if (writer.Process())
