@@ -1,6 +1,6 @@
 # H264/HEVC Video Encoder for OpenGL
 
-[![Mandy Frenzy Video](https://img.youtube.com/vi/ilSeZznzDt4/0.jpg)](https://www.youtube.com/watch?v=ilSeZznzDt4)
+[![Mandy Frenzy Video](https://img.youtube.com/vi/ilSeZznzDt4/0.jpg)](https://www.youtube.com/watch?v=od1Z9nb5vwQ)
 
 ## Requirements
 
