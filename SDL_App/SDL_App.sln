@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL_App", "SDL_App\SDL_App.vcxproj", "{33BC7359-EBFB-4FA3-A5BC-8D41F06C641B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H264SinkWriter", "H264SinkW
 	ProjectSection(ProjectDependencies) = postProject
 		{D78AF21F-1E78-437B-944F-6011E8A98C9B} = {D78AF21F-1E78-437B-944F-6011E8A98C9B}
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{00140C40-59D3-4AF6-A448-F43288470D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,26 +123,6 @@ Global
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x64.Build.0 = Release|x64
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x86.ActiveCfg = Release|Win32
 		{9D3E0AD1-827A-41F8-BA89-CFBD9ED7272E}.Release|x86.Build.0 = Release|Win32
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|Win32.Build.0 = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x64.Build.0 = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Debug|x86.Build.0 = Debug|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Win32.ActiveCfg = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|Win32.Build.0 = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x64.ActiveCfg = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x64.Build.0 = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x86.ActiveCfg = Release|Any CPU
-		{00140C40-59D3-4AF6-A448-F43288470D6C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
